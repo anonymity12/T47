@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <attr name="mText" format="string"/>
+    <attr name="mTextColor" format="color"/>
+    <attr name="mTextSize" format="dimension"/>
+    <declare-styleable name="MyTextView">
+        <attr name="mText"/>
+        <attr name="mTextColor"/>
+        <attr name="mTextSize"/>
+    </declare-styleable>
+    <attr name="panelSize" format="dimension"/>
+    <declare-styleable name="panelview">
+        <attr name="panelSize"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="fill_parent"
+
+    android:layout_height="fill_parent">
+
+    <TableRow>
+
+        <TextView
+
+            android:padding="3dip"
+
+            android:text="column1" />
+
+        <TextView
+
+            android:padding="3dip"
+
+            android:text="column2" />
+
+        <TextView
+
+            android:padding="3dip"
+
+            android:text="column3" />
+
+    </TableRow>
+
+    <TableRow>
+
+        <TextView
+
+            android:text="column11"
+
+            android:visibility="invisible" />
+        //cell不见了
+
+        <TextView
+
+            android:gravity="right"
+
+            android:padding="3dip"
+
+            android:text="左边的invisible" />
+
+        <Button
+
+            android:id="@+id/go"
+
+            android:padding="3dip"
+
+            android:text="go" />
+
+        <Button
+
+            android:padding="3dip"
+
+            android:text="cancel" />
+
+    </TableRow>
+
+    <View
+    android:layout_height="2dip"
+
+    android:background="#F00" />
+
+    <TableRow>
+
+        <TextView
+
+            android:text="右边的cell empty" />
+
+        <TextView
+
+            android:layout_column="2"
+
+            android:padding="3dip"
+
+            android:text="跳开empty cell" />
+
+    </TableRow>
+
+    <TableRow>
+        <TextView />
+
+        <TextView
+
+            android:layout_span="3"
+
+            android:background="#FFC0C0C0"
+
+            android:gravity="center_horizontal"
+
+            android:padding="3dip"
+
+            android:text="合并3个单元格"
+
+            android:textColor="#f00" />
+
+    </TableRow>
+
+</TableLayout>
