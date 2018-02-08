@@ -19,13 +19,15 @@ import butterknife.OnClick;
 
 /**
  * Created by thinkpad on 2018/2/8.
+ *
+ * This fragment shows that we can use ButterKnife to re-define all button click events to one function.
  */
+
 
 public class HeadFragment extends Fragment {
     @BindViews({R.id.button1,R.id.button2,R.id.button3,R.id.button4})
     List<Button> buttonList;
     public HeadFragment(){
-
     }
 
     @Nullable

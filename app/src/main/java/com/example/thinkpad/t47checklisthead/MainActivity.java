@@ -12,9 +12,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.fragment.HeadFragment;
+import com.example.thinkpad.t47checklisthead.fragment.TextFragment;
 import com.example.thinkpad.t47checklisthead.view.panelview;
 
-
+/**
+ * Basic activity for testings.
+ * tested:
+ * 1. seek bar control the panel view
+ * 2. using fragment manager to use fragment.
+* */
 public class MainActivity extends AppCompatActivity {
 
     private SeekBar seekBar;
@@ -25,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main4);
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction()
-                .replace(R.id.fragment_container,new HeadFragment())
+                .replace(R.id.fragment_container,new TextFragment())
                 .commit();
 //        seekBar = findViewById(R.id.seek_bar);
 //        mPanelview = findViewById(R.id.my_custom_view);

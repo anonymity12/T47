@@ -7,7 +7,9 @@ import android.view.View;
 
 
 import com.example.thinkpad.t47checklisthead.view.CircleMenuLayout;
-
+/**
+*  Activity show the circle menu layout
+* */
 public class Main2Activity extends AppCompatActivity {
     private CircleMenuLayout mCircleMenuLayout;
 
