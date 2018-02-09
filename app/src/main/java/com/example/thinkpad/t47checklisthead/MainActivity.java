@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.fragment.HeadFragment;
 import com.example.thinkpad.t47checklisthead.fragment.TextFragment;
+import com.example.thinkpad.t47checklisthead.view.ProcessView2;
 import com.example.thinkpad.t47checklisthead.view.panelview;
 
 /**
@@ -24,33 +25,34 @@ import com.example.thinkpad.t47checklisthead.view.panelview;
 public class MainActivity extends AppCompatActivity {
 
     private SeekBar seekBar;
-    private panelview mPanelview;
+    private ProcessView2 mPanelview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main4);
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.fragment_container,new TextFragment())
-                .commit();
-//        seekBar = findViewById(R.id.seek_bar);
-//        mPanelview = findViewById(R.id.my_custom_view);
-//        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                mPanelview.setdg(progress);
-//                Log.d("MainActivity", String.valueOf(seekBar.getProgress()));
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-////                Toast.makeText(MainActivity.this, "pressed seek bar",Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-////                Toast.makeText(MainActivity.this, "release seek bar", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        setContentView(R.layout.activity_main5_panel);
+//        FragmentManager fm = getFragmentManager();
+//        fm.beginTransaction()
+//                .replace(R.id.fragment_container,new TextFragment())
+//                .commit();
+
+        seekBar = findViewById(R.id.seek_bar);
+        mPanelview = findViewById(R.id.my_custom_view);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mPanelview.setProgress(progress);
+                Log.d("MainActivity", String.valueOf(seekBar.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+//                Toast.makeText(MainActivity.this, "pressed seek bar",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+//                Toast.makeText(MainActivity.this, "release seek bar", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

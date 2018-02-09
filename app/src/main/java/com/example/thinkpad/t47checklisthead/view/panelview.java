@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.icu.util.MeasureUnit;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -27,6 +29,7 @@ public class panelview extends View {
     float dg = 120;
     float num = 66;
     float mPanelSize;
+    Shader mShader;
     public panelview(Context context) {
         this(context, null);
 
@@ -39,6 +42,7 @@ public class panelview extends View {
         super(context, attrs, defStyleAttrs);
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.panelview, defStyleAttrs, 0);
         mPanelSize = a.getDimension(R.styleable.panelview_panelSize, 600);
+        mShader = new SweepGradient(getWidth() / 2, getHeight() / 2, Color.YELLOW, Color.RED);
         a.recycle();
     }
     public void setdg(float dgree) {
@@ -80,9 +84,12 @@ public class panelview extends View {
         //移动到可能：200，250处
         canvas.translate(getWidth() / 2, getHeight()/2);//这里取得view的宽高用作移动点，bug？ fine
         paint.setStrokeWidth(80);
-        paint.setColor(0xff1e7d1c);//画绿色底盘，表明已经达到
+//        paint.setColor(0xff1e7d1c);//画绿色底盘，表明已经达到
+        paint.setShader(mShader);
+
         RectF vol1 = new RectF(-getWidth() / 2 + 40, -getHeight() / 2 + 40, getWidth() / 2 - 40, getHeight() / 2 - 40);//这里的120应该在后期可以调整：panelSize
         canvas.drawArc(vol1, 180, dg, false, paint);
+        paint.setShader(null);
         paint.setColor(0xffd3d3d3);//画灰色底盘，未达到
         canvas.drawArc(vol1, 180 + dg, 180 - dg, false, paint);
         //canvas.drawCircle(0, 0, 200, paint); //??ԲȦ
@@ -112,6 +119,7 @@ public class panelview extends View {
         Paint tmpPaint = new Paint(paint); //画red刻度线
         tmpPaint.setStrokeWidth(5);
         tmpPaint.setColor(Color.RED);
+//        tmpPaint.setShader(mShader);
         tmpPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         float y = 120;
         int count = 32; //控制数量

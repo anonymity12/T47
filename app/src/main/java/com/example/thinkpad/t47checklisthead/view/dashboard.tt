@@ -153,7 +153,7 @@ public class DashBoardProgressView extends FrameLayout {
             * <p>Causes the Runnable to be added to the message queue.
             * The runnable will be run on the user interface thread.</p>
             * 使用了post后，run()中的代码会提前加载到message queue,提前于onDraw()方法的
-            * 执行,以初始化一些数据，有些数据数据是onMeasure()方法中返回的，不这么做的话无法
+            * 执行,以初始化一些数据，有些数据??数据是onMeasure()方法中返回的，不这么做的话无法
             * 计算比例以适配大小
             * */
             post(new Runnable() {
