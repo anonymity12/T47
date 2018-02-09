@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.fragment.HeadFragment;
 import com.example.thinkpad.t47checklisthead.fragment.TextFragment;
-import com.example.thinkpad.t47checklisthead.view.ProcessView2;
+import com.example.thinkpad.t47checklisthead.view.ProcessView;
 import com.example.thinkpad.t47checklisthead.view.panelview;
 
 /**
@@ -25,7 +25,7 @@ import com.example.thinkpad.t47checklisthead.view.panelview;
 public class MainActivity extends AppCompatActivity {
 
     private SeekBar seekBar;
-    private ProcessView2 mPanelview;
+    private ProcessView mPanelview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
