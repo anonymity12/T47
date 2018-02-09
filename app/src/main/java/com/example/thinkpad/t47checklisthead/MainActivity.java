@@ -1,20 +1,18 @@
 package com.example.thinkpad.t47checklisthead;
 
-import android.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.thinkpad.t47checklisthead.fragment.HeadFragment;
-import com.example.thinkpad.t47checklisthead.fragment.TextFragment;
-import com.example.thinkpad.t47checklisthead.view.ProcessView;
-import com.example.thinkpad.t47checklisthead.view.panelview;
+import com.example.thinkpad.t47checklisthead.view.DrawView;
 
 /**
  * Basic activity for testings.
@@ -24,35 +22,71 @@ import com.example.thinkpad.t47checklisthead.view.panelview;
 * */
 public class MainActivity extends AppCompatActivity {
 
-    private SeekBar seekBar;
-    private ProcessView mPanelview;
+    EmbossMaskFilter emboss;
+    BlurMaskFilter blur;
+    DrawView drawView;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main5_panel);
-//        FragmentManager fm = getFragmentManager();
-//        fm.beginTransaction()
-//                .replace(R.id.fragment_container,new TextFragment())
-//                .commit();
-
-        seekBar = findViewById(R.id.seek_bar);
-        mPanelview = findViewById(R.id.my_custom_view);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mPanelview.setProgress(progress);
-                Log.d("MainActivity", String.valueOf(seekBar.getProgress()));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-//                Toast.makeText(MainActivity.this, "pressed seek bar",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-//                Toast.makeText(MainActivity.this, "release seek bar", Toast.LENGTH_SHORT).show();
-            }
-        });
+        LinearLayout line = new LinearLayout(this);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        // 获取创建的宽度和高度
+        getWindowManager().getDefaultDisplay()
+                .getRealMetrics(displayMetrics);
+        // 创建一个DrawView，该DrawView的宽度、高度与该Activity保持相同
+        drawView = new DrawView(this, displayMetrics.widthPixels
+                , displayMetrics.heightPixels);
+        line.addView(drawView);
+        setContentView(line);
+        emboss = new EmbossMaskFilter(new float[]
+                { 1.5f, 1.5f, 1.5f }, 0.6f,	6, 4.2f);
+        blur = new BlurMaskFilter(8, BlurMaskFilter.Blur.NORMAL);
     }
-}
+    @Override
+    // 负责创建选项菜单
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflator = new MenuInflater(this);
+        // 装载R.menu.my_menu对应的菜单，并添加到menu中
+        inflator.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    // 菜单项被单击后的回调方法
+    public boolean onOptionsItemSelected(MenuItem mi)
+    {
+        // 判断单击的是哪个菜单项，并有针对性地作出响应
+        switch (mi.getItemId())
+        {
+            case R.id.red:
+                drawView.paint.setColor(Color.RED);
+                mi.setChecked(true);
+                break;
+            case R.id.green:
+                drawView.paint.setColor(Color.GREEN);
+                mi.setChecked(true);
+                break;
+            case R.id.blue:
+                drawView.paint.setColor(Color.BLUE);
+                mi.setChecked(true);
+                break;
+            case R.id.width_1:
+                drawView.paint.setStrokeWidth(1);
+                break;
+            case R.id.width_3:
+                drawView.paint.setStrokeWidth(3);
+                break;
+            case R.id.width_5:
+                drawView.paint.setStrokeWidth(5);
+                break;
+            case R.id.blur:
+                drawView.paint.setMaskFilter(blur);
+                break;
+            case R.id.emboss:
+                drawView.paint.setMaskFilter(emboss);
+                break;
+        }
+        return true;
+    }}
