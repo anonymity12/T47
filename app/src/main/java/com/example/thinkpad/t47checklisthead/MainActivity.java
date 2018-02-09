@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.fragment.HeadFragment;
 import com.example.thinkpad.t47checklisthead.fragment.TextFragment;
+import com.example.thinkpad.t47checklisthead.view.FlexiblePanelView;
 import com.example.thinkpad.t47checklisthead.view.ProcessView;
 import com.example.thinkpad.t47checklisthead.view.panelview;
 
@@ -25,7 +26,7 @@ import com.example.thinkpad.t47checklisthead.view.panelview;
 public class MainActivity extends AppCompatActivity {
 
     private SeekBar seekBar;
-    private ProcessView mPanelview;
+    private FlexiblePanelView mPanelview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,17 +37,19 @@ public class MainActivity extends AppCompatActivity {
 //                .commit();
 
         seekBar = findViewById(R.id.seek_bar);
+        Log.i("TAG",">>>>>>>>>>>>>>>>find seekBar");
         mPanelview = findViewById(R.id.my_custom_view);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mPanelview.setProgress(progress);
+                float mRadian = (float) (((5/3 * Math.PI) / 100 ) * progress - 5/6 * Math.PI);
+                mPanelview.setYaw(mRadian);
                 Log.d("MainActivity", String.valueOf(seekBar.getProgress()));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-//                Toast.makeText(MainActivity.this, "pressed seek bar",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "pressed seek bar",Toast.LENGTH_SHORT).show();
             }
 
             @Override
