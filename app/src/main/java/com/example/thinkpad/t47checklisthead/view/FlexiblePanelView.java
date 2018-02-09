@@ -26,7 +26,7 @@ public class FlexiblePanelView extends View{
     float yaw =0;// - 5/6 pi -> 0 -> 5/6 pi;
     RectF rect = new RectF();
     Paint paint =new Paint(Paint.ANTI_ALIAS_FLAG);
-    ObjectAnimator animator = ObjectAnimator.ofFloat(this, "yaw", 0, 2);
+    ObjectAnimator animator = ObjectAnimator.ofFloat(this, "yaw", 0, 2.5f);
 
     public FlexiblePanelView(Context context) {
         this(context, null);

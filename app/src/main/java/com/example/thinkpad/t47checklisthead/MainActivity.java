@@ -36,9 +36,10 @@ public class MainActivity extends AppCompatActivity {
 //                .replace(R.id.fragment_container,new TextFragment())
 //                .commit();
 
+        mPanelview = (FlexiblePanelView) findViewById(R.id.my_custom_view1);
+        boolean test = mPanelview == null;
+        Log.i("MainActivity",">>>>>>>> test result" + test);
         seekBar = findViewById(R.id.seek_bar);
-        Log.i("TAG",">>>>>>>>>>>>>>>>find seekBar");
-        mPanelview = findViewById(R.id.my_custom_view);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
