@@ -13,3 +13,5 @@
 对应ProcessView2
 
 <img src="https://github.com/anonymity12/T47/blob/master/img/Screenshot_1518144100.png" width = "300" height = "533" alt="图片名称" align=center />
+
+this line is add from mac
