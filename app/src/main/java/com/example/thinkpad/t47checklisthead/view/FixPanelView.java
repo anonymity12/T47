@@ -9,6 +9,8 @@ import android.view.View;
 /**
  * Created by thinkpad on 2018/2/8.
  * A view that has a fixed pointer and a flexible panel like in the plane.
+ *
+ * ##########未完成，继承者 请看 FlexiblePanelView
  */
 
 public class FixPanelView extends View {

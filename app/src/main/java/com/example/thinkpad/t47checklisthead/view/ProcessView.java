@@ -79,11 +79,7 @@ public class ProcessView extends View {
         Shader shader =new LinearGradient(centerX - radius,centerY,centerX+radius,centerY,colors,null,Shader.TileMode.CLAMP);
         paint.setShader(shader);
 
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setStrokeWidth(dpToPixel(20));
 
-        rect.set(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
         canvas.drawArc(rect,135,progress*2.7f,false,paint);
         //以上，画好了arc
         paint.setShader(null);
