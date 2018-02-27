@@ -4,6 +4,16 @@ import android.graphics.Color;
 import android.util.DisplayMetrics;
 
 public class Utils {
+
+    /*---------------------------------------------------------------------------*/
+    //used for sine wave
+    public static int centerStartingX, centerStartingY; // ������
+    public static int centerEndX, centerEndY; // ����յ�
+    public static double ScaleX = 30, ScaleY; // �̶ȼ��
+    public static float core = 1000; // Y������
+    public static double spacingY = 0.8;
+    /*---------------------------------------------------------------------------*/
+
     public static float dpToPixel(float dp) {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         return dp * metrics.density;
