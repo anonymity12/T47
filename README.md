@@ -21,3 +21,8 @@
 
 <img src="https://github.com/anonymity12/T47/blob/master/img/screen_20180227195509.png" width = "300" height = "533" alt="图片名称" align=center />
 
+### A circle button, by selector, shape
+
+see commit message : Add oval button by selector
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/scr_20180301111618.png" width = "300" height = "533" alt="图片名称" align=center />
