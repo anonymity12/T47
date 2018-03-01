@@ -25,4 +25,6 @@
 
 see commit message : Add oval button by selector
 
-<img src="https://github.com/anonymity12/T47/blob/master/img/scr_20180301111618.png" width = "300" height = "533" alt="图片名称" align=center />
+<img src="https://github.com/anonymity12/T47/blob/master/img/scr_20180301111618.png" width = "300" height = "300" alt="图片名称" align=center />
+
+
