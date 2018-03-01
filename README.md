@@ -20,3 +20,4 @@
 对应FlexiblePanelView
 
 <img src="https://github.com/anonymity12/T47/blob/master/img/screen_20180227195509.png" width = "300" height = "533" alt="图片名称" align=center />
+

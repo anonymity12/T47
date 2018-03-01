@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -18,5 +20,9 @@ import android.view.Menu;
  * 3. delete most thing for merge dev to master
 * */
 public class MainActivity extends AppCompatActivity {
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
 }
