@@ -26,16 +26,15 @@ import android.widget.TextView;
  */
 public class MainActivity extends AppCompatActivity {
     //google example: Creating Swipe Views with Tabs.
-    //But the bug here is tab only has 3, see %1, can't swipe to page 4 or later.
+    //here using title strip, so you can't click title to choose a page.
     DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
     ViewPager mViewPager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        final ActionBar actionBar = getSupportActionBar();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_official_view_pager);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
 
 
         mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(
@@ -43,37 +42,8 @@ public class MainActivity extends AppCompatActivity {
         );
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
-        mViewPager.setOnPageChangeListener( new ViewPager.SimpleOnPageChangeListener(){
-            @Override
-            public void onPageSelected(int position) {
-                getSupportActionBar().setSelectedNavigationItem(position);
-            }
-        });
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
 
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
-            }
-
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-            }
-        };
-        //%1 bug
-        for (int i = 0; i < 3; i ++) {
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText("Tab" + (i + 1))
-                            .setTabListener(tabListener)
-            );
-        }
-        Log.i("MainActivity3", ">>>>>>>>>>>>>>>>>>onCreate");
 
     }
 
