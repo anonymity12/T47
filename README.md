@@ -41,3 +41,11 @@ for detail, see: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de81564c
 for detail, see also: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de81564c17bea&sub=59442BCD216C4070934930A1A5BD681C
 
 <img src="https://github.com/anonymity12/T47/blob/master/img/googleViewPagerExample.jpg" width = "300" height = "350" alt="图片名称" align=center />
+
+### closeWithPower
+
+像一个微笑的嘴巴和鼻子，其实是 关闭按钮。
+
+对应： CloseWithPowerIndicatorView
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/closeWithPower.jpg" width = "300" height = "350" alt="图片名称" align=center />

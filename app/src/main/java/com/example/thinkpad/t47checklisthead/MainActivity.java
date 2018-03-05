@@ -1,5 +1,6 @@
 package com.example.thinkpad.t47checklisthead;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.thinkpad.t47checklisthead.view.CloseWithPowerIndicatorView;
+
 /**
  * Basic activity for testings.
  * tested:
@@ -25,67 +28,22 @@ import android.widget.TextView;
  * 5. google example: Creating Swipe Views with Tabs.
  */
 public class MainActivity extends AppCompatActivity {
-    //google example: Creating Swipe Views with Tabs.
-    //here using title strip, so you can't click title to choose a page.
-    DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
-    ViewPager mViewPager;
-
+    CloseWithPowerIndicatorView closeWithPowerIndicatorView;
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_official_view_pager);
+        setContentView(R.layout.activity_close_with_power_indicator);
+        closeWithPowerIndicatorView = findViewById(R.id.close_power_view);
+        closeWithPowerIndicatorView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ObjectAnimator animator = ObjectAnimator.ofInt(closeWithPowerIndicatorView,"incrementAngular",90);
+                animator.setDuration(300);
+                animator.start();
+                return true;
+            }
+        });
 
 
-
-        mDemoCollectionPagerAdapter = new DemoCollectionPagerAdapter(
-                getSupportFragmentManager()
-        );
-        mViewPager = findViewById(R.id.pager);
-        mViewPager.setAdapter(mDemoCollectionPagerAdapter);
-
-
-
-    }
-
-    public class DemoCollectionPagerAdapter extends FragmentPagerAdapter {
-        public DemoCollectionPagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = new DemoObjectFragment();
-            Bundle args = new Bundle();
-            args.putInt(DemoObjectFragment.ARG_OBJECT, position + 1);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 100;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "OBJECT " + (position + 1);
-        }
-    }
-
-    public static class DemoObjectFragment extends Fragment {
-        public static final String ARG_OBJECT = "object";
-
-        @Override
-        public View onCreateView(LayoutInflater inflater,
-                                 ViewGroup container, Bundle savedInstanceState) {
-            // The last two arguments ensure LayoutParams are inflated
-            // properly.
-            View rootView = inflater.inflate(
-                    R.layout.fragment_collection_object, container, false);
-            Bundle args = getArguments();
-            ((TextView) rootView.findViewById(R.id.text1)).setText(
-                    Integer.toString(args.getInt(ARG_OBJECT)));
-            return rootView;
-        }
     }
 }
