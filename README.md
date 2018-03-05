@@ -34,5 +34,10 @@ I'm using all traditional MainActivity and activity_main.xml
 
 for detail, see: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de81564c17bea&sub=59442BCD216C4070934930A1A5BD681C
 
-<img src="https://github.com/anonymity12/T47/blob/master/img/viewpager.png" width = "300" height = "300" alt="图片名称" align=center />
+<img src="https://github.com/anonymity12/T47/blob/master/img/viewpager.jpg" width = "300" height = "300" alt="图片名称" align=center />
 
+### viewPager, Goolge tutorial
+
+for detail, see also: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de81564c17bea&sub=59442BCD216C4070934930A1A5BD681C
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/googleViewPagerExample.jpg" width = "300" height = "350" alt="图片名称" align=center />
