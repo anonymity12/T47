@@ -16,6 +16,8 @@ import com.example.thinkpad.t47checklisthead.view.TestTextView;
 
 /**
  * Created by thinkpad on 2018/2/8.
+ *
+ * A test for change the text position by a seek bar.
  */
 
 public class TextFragment extends Fragment{

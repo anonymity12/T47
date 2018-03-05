@@ -25,6 +25,14 @@
 
 see commit message : Add oval button by selector
 
+want revert to this commit and the output? Remember at this time
+I'm using all traditional MainActivity and activity_main.xml
+
 <img src="https://github.com/anonymity12/T47/blob/master/img/scr_20180301111618.png" width = "300" height = "300" alt="图片名称" align=center />
 
+### viewpager and tablayout
+
+for detail, see: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de81564c17bea&sub=59442BCD216C4070934930A1A5BD681C
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/viewpager.png" width = "300" height = "300" alt="图片名称" align=center />
 
