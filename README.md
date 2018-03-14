@@ -49,3 +49,8 @@ for detail, see also: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de8
 对应： CloseWithPowerIndicatorView
 
 <img src="https://github.com/anonymity12/T47/blob/master/img/closeWithPower.jpg" width = "300" height = "350" alt="图片名称" align=center />
+
+
+### Handler Test OK!
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/handlerOK 2018-03-14 at 11.16.47 PM.jpg" width = "300" height = "250" alt="图片名称" align=center />
