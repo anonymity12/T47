@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             Log.d(TAG, "进入Thread的run");
+            super.run();
+            //if we have above line: super.run(), the we have everything prepared in parent class, so won't step into if
             if (Looper.myLooper() == null) {
                 Looper.prepare();
                 Log.d(TAG, "Looper.prepare() executed");
