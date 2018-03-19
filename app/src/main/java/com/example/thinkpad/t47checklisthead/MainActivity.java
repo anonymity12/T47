@@ -1,14 +1,22 @@
 package com.example.thinkpad.t47checklisthead;
 
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * Basic activity for testings.
@@ -19,14 +27,62 @@ import android.widget.Button;
  * 4. using tab layout and view pager. Tutorial from http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0731/3247.html
  * 5. google example: Creating Swipe Views with Tabs.
  * 6. 03142018 test handler
- * 7. 03152018 test HandlerThread
+ * 7. Test AIDL by jinliang gao
+ * 8. Using messenger # Android art c2.4.3 @03192018
  */
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "MyHT";
+    public static final int MSG_FROM_CLIENT = 299;
+    public static final int MSG_FROM_SERVICE = 300;
+    public static final String TAG = "MainActivity";
     Button btn = null;
     Button btn2 = null;
     Handler handler = null;
-    MyHandlerThread mHandlerThread = null;
+
+    private Messenger mService;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = new Messenger(service);
+            //return a new Message object from the global pool
+            Message msg = Message.obtain(null, MSG_FROM_CLIENT);
+            Bundle data = new Bundle();
+            data.putString("msg","hello, this is a client");
+            msg.setData(data);
+            //-----------------code that make we can see a response from this service------------
+
+            msg.replyTo = mGetReplyMessenger;
+
+            //-----------------code that make we can see a response from this service------------
+
+            try {
+                mService.send(msg);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    //-----------------code that make we can see a response from our service------------
+    private Messenger mGetReplyMessenger = new Messenger(new MessengerHandler());
+    private static class MessengerHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_FROM_SERVICE:
+                    Log.i(TAG, "handleMessage: receive msg from Service: " + msg.getData().getString("reply"));
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    }
+    //-----------------code that make we can see a response from our service------------
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,63 +90,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         btn = (Button) findViewById(R.id.btn_open_thread);
         btn2 = (Button) findViewById(R.id.btn_open_thread2);
-        Log.d(TAG, Looper.myLooper().toString());
-        Log.d(TAG, "should same as above >>  " + Looper.getMainLooper().toString());
-
-
+        btn.setText("send message by Messenger");
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mHandlerThread = new MyHandlerThread("onStartHandlerThread");
-                Log.d(TAG, "创建myHandlerThread对象");
-                mHandlerThread.start();
-                Log.d(TAG, "start上述的HandlerThread");
-            }
-        });
-
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mHandlerThread.mHandler != null) {
-                    Message msg = new Message();
-                    msg.what = 1;
-                    mHandlerThread.mHandler.sendMessage(msg);
-                    Log.d(TAG, ">>>>> btn2  send a msg");
-                }
-
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MessageService.class);
+                bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
             }
         });
     }
 
-    class MyHandlerThread extends HandlerThread {
-
-
-
-        public static final String TAG = "MyHT";
-
-        public Handler mHandler = null;
-
-        public MyHandlerThread(String name) {
-            super(name);
-        }
-
-        @Override
-        public void run() {
-            Log.d(TAG, "进入Thread的run");
-            super.run();
-            //if we have above line: super.run(), the we have everything prepared in parent class, so won't step into if
-            if (Looper.myLooper() == null) {
-                Looper.prepare();
-                Log.d(TAG, "Looper.prepare() executed");
-                mHandler = new Handler(Looper.myLooper()){
-                    @Override
-                    public void handleMessage(Message msg) {
-                        Log.d(TAG, ">>>> handler got msg");
-                        super.handleMessage(msg);
-                    }
-                };
-            }
-        }
+    @Override
+    protected void onDestroy() {
+        unbindService(mConnection);
+        super.onDestroy();
     }
-
 }

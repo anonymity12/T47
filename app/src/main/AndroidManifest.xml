@@ -19,9 +19,22 @@
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        </activity>
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:process=":server"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.sss"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
+
+        <service android:name="com.example.thinkpad.t47checklisthead.MessageService"
+            android:process=":remote"/>
+
     </application>
 
 </manifest>
