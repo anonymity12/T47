@@ -26,18 +26,20 @@ import android.widget.Toast;
  * 5. google example: Creating Swipe Views with Tabs.
  * 6. 03142018 test handler
  * 7. Test AIDL by jinliang gao
+ * 8. Using messenger # Android art c2.4.3 @03192018
  */
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "MyHT";
+    public static final int MSG_FROM_CLIENT = 299;
+    public static final String TAG = "MainActivity";
     Button btn = null;
     Button btn2 = null;
     Handler handler = null;
-    MyHandlerThread mHandlerThread = null;
 
     private boolean isBind;
     private ServiceConnection ServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            //cast an IBinder object into a interface we can use
             iUser = IUser.Stub.asInterface(service);
             isBind = true;
             Toast.makeText(MainActivity.this, "success", Toast.LENGTH_SHORT).show();
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     };
     private IUser iUser;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,24 +60,12 @@ public class MainActivity extends AppCompatActivity {
         btn = (Button) findViewById(R.id.btn_open_thread);
         btn2 = (Button) findViewById(R.id.btn_open_thread2);
 
-        Log.d("MainActivity.myLooper()", Looper.myLooper().toString());
-        Log.d("MainActivity.MainLooper", "should same as above >>  " + Looper.getMainLooper().toString());
-
+        //-----------------code by jinliang-------------
+        //connect the service and return our binder.
         Intent intent = new Intent();
         intent.setPackage("com.example.thinkpad.t47checklisthead");
         intent.setAction("com.sss");
         bindService(intent,ServiceConnection, Service.BIND_AUTO_CREATE);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mHandlerThread = new MyHandlerThread("onStartHandlerThread");
-                Log.d(TAG, "创建myHandlerThread对象");
-                mHandlerThread.start();
-                Log.d(TAG, "start上述的HandlerThread");
-            }
-        });
-
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,35 +85,11 @@ public class MainActivity extends AppCompatActivity {
                 }else {
 
                 }
-
             }
         });
+        //-----------------code by jinliang-------------
+
     }
 
-    class MyHandlerThread extends Thread {
-
-        MyHandlerThread(String s) {
-            super();
-        }
-
-        public static final String TAG = "MyHT";
-
-        public Handler mHandler = null;
-
-        @Override
-        public void run() {
-            Log.d(TAG, "进入Thread的run");
-            Looper.prepare();
-//            Looper.prepare();
-            mHandler = new Handler(Looper.myLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    Log.d(TAG, "获得了message");
-                    super.handleMessage(msg);
-                }
-            };
-            Looper.loop();
-        }
-    }
 
 }

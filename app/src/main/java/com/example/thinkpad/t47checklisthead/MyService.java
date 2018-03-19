@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
-
+/**
+ * Service who deal with corresponding request(i.e. login and logout)
+ * Create by jinliang gao 03192018
+ * */
 public class MyService extends Service {
     public MyService() {
     }
@@ -25,7 +28,7 @@ public class MyService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
+        // Return the communication channel to the service.
 
         return stub;
     }
