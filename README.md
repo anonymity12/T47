@@ -54,3 +54,6 @@ for detail, see also: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de8
 ### Handler Test OK!
 
 <img src="https://github.com/anonymity12/T47/blob/master/img/handlerOK.png" width = "300" height = "250" alt="图片名称" align=center />
+
+### AIDL Test OK!
+
