@@ -57,3 +57,8 @@ for detail, see also: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de8
 
 ### AIDL Test OK!
 
+### AppWidget simple example TestOk!
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/Screenshot_20180320-140755.png" width = "300" height = "580" alt="图片名称" align=center />
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/Screenshot_20180320-140806.png" width = "300" height = "250" alt="图片名称" align=center />
