@@ -13,4 +13,7 @@
     <string name="width">画笔宽度</string>
     <string name="blur">模糊效果</string>
     <string name="emboss">浮雕效果</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
 </resources>
