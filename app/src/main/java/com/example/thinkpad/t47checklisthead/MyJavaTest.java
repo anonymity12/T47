@@ -9,30 +9,36 @@ import java.util.List;
 /**
  * Created by paul on 23/03/2018.
  * 1. show u how to get method generic return type.
+ * 2. show u how to get method generic parameter type.
  */
 
 public class MyJavaTest {
     public static void main(String[] args) throws NoSuchMethodException {
-        Method method = MyClass.class.getMethod("getStringList", null);
+        Method method = MyClass.class.getMethod("getStringList", List.class);
+        //we want the generic param type contained in this method.
+        Type [] genericParameterTypes = method.getGenericParameterTypes();
 
-        Type returnType = method.getGenericReturnType();
+        for (Type genericParameterType : genericParameterTypes) {
+            if (genericParameterType instanceof ParameterizedType) {
+                ParameterizedType aType = (ParameterizedType) genericParameterType;
+                Type [] parameterArgTypes = aType.getActualTypeArguments();
+                for (Type parameterArgType : parameterArgTypes) {
+                    Class parameterArgClass = (Class) parameterArgType;
+                    System.out.print(parameterArgClass);
 
-        if(returnType instanceof ParameterizedType){
-            ParameterizedType type = (ParameterizedType) returnType;
-            Type[] typeArguments = type.getActualTypeArguments();
-            for(Type typeArgument : typeArguments){
-                Class typeArgClass = (Class) typeArgument;
-                System.out.println("typeArgClass = " + typeArgClass);
+                }
             }
         }
+
+
     }
 
     class MyClass {
 
         protected List<String> stringList = new ArrayList<>();
 
-        public List<String> getStringList() {
-            return this.stringList;
+        public void getStringList(List<Integer> param) {
+            return;
         }
     }
 }
