@@ -7,10 +7,13 @@ import android.util.Log;
 
 import rx.Subscriber;
 import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Created by paul on 30/03/2018.
  * 1. test Rx on Android App ok
+ * 2. write some code by hand
+ * 3. use from operator
  */
 
 public class RxDemoActivity extends Activity{
@@ -20,28 +23,42 @@ public class RxDemoActivity extends Activity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        rxJavaCreate();
+//        rxJavaCreate();
+        fromOperation();
+    }
+
+    //from操作符
+    private void fromOperation(){
+        Integer [] items = {1,2,3,4,5};
+        //使用在被观察者，返回的对象一般都是数值类型
+        Observable observable =Observable.from(items);
+        observable.subscribe(new Action1() {
+            @Override
+            public void call(Object o) {
+                Log.i(TAG,o.toString());
+            }
+        });
     }
 
     //创建
     private static void rxJavaCreate() {
         //定义被观察者
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+        Observable<Integer> observable = Observable.create(new Observable.OnSubscribe<Integer>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
+            public void call(Subscriber<? super Integer> subscriber) {
+
                 //判断是否有订阅的关系
                 if (!subscriber.isUnsubscribed()) {
-                    subscriber.onNext("Hello");
-                    subscriber.onNext("Hi");
-                    subscriber.onNext(getJson());
-                    subscriber.onNext("END");
+                    for (int i = 0; i < 10; i++) {
+                        subscriber.onNext(i);
+                    }
                     //完成
                     subscriber.onCompleted();
                 }
             }
         });
 
-        Subscriber<String> showSub = new Subscriber<String>() {
+        Subscriber<Integer> showSub = new Subscriber<Integer>() {
             //结束
             @Override
             public void onCompleted() {
@@ -56,8 +73,8 @@ public class RxDemoActivity extends Activity{
 
             //继续执行
             @Override
-            public void onNext(String s) {
-                Log.i(TAG, s);
+            public void onNext(Integer s) {
+                Log.i(TAG, s+"");
             }
         };
         //订阅
