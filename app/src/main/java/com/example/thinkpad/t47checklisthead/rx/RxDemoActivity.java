@@ -12,7 +12,10 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by paul on 30/03/2018.
@@ -23,6 +26,7 @@ import io.reactivex.disposables.Disposable;
  * 5. just, range, filter
  * 6. 加载图片
  * 7. 基本模式：observable.subscribe(observer);
+ * 8. chain programming
  */
 
 public class RxDemoActivity extends Activity {
@@ -34,50 +38,41 @@ public class RxDemoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rx);
         img = findViewById(R.id.imageView);
-        getObservable().subscribe(getObserver());
-    }
-
-    public Observable<String> getObservable() {
-        return Observable.create(new ObservableOnSubscribe<String>() {
+        Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
-                e.onNext("you are handsome");
-                e.onNext("you are wonderful");
+                e.onNext("you are great");
+                e.onNext("you are top one");
                 e.onNext("unsubscribe");
-                e.onNext("you are awesome and ready to unsubscribe");
-                e.onNext("still here");
+                e.onNext("am I show out?");
                 e.onComplete();
             }
-        });
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.e(TAG, "onNext: "+s );
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.e(TAG, "onComplete: !!!" );
+                    }
+                });
     }
 
-    public Observer<String> getObserver(){
-        return new Observer<String>() {
-            Disposable disposable = null;
-            @Override
-            public void onSubscribe(Disposable d) {
-                disposable = d;
-            }
-
-            @Override
-            public void onNext(String s) {
-                Log.e(TAG, "onNext: "+s );
-                if (s.equals("unsubscribe")) {
-                    disposable.dispose();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-                Log.i(TAG, "onComplete: !!!");//tt：这行不会被执行，因为在onNext里有清理了disposable。
-            }
-        };
-    }
 
 
 }
