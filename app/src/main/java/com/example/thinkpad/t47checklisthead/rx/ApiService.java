@@ -1,9 +1,9 @@
 package com.example.thinkpad.t47checklisthead.rx;
 
-import android.database.Observable;
 
 import com.example.thinkpad.t47checklisthead.rx.bean.NetBean;
 
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -14,6 +14,6 @@ import retrofit2.http.POST;
 
 public interface ApiService {
     @FormUrlEncoded
-    @POST
+    @POST("/post")
     Observable<NetBean> getUserInfo(@Field("username") String username, @Field("password") String password);
 }
