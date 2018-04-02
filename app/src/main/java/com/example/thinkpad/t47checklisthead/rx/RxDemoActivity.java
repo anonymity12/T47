@@ -7,9 +7,12 @@ import android.util.Log;
 
 import java.util.concurrent.TimeUnit;
 
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by paul on 30/03/2018.
@@ -17,6 +20,7 @@ import rx.functions.Action1;
  * 2. write some code by hand
  * 3. use from operator
  * 4. interval操作符
+ * 5. just, range, filter
  */
 
 public class RxDemoActivity extends Activity{
@@ -28,7 +32,81 @@ public class RxDemoActivity extends Activity{
 
 //        rxJavaCreate();
 //        fromOperation();
-        intervalOperation();
+//        intervalOperation();
+//        justOperation();
+//        rangeOperation();
+        filterOperation();
+    }
+
+    private void filterOperation() {
+        Observable.just(1,2,3,4,5,6,7,8,9,0).filter(new Func1<Integer, Boolean>() {
+            @Override
+            public Boolean call(Integer integer) {
+                return integer < 5;
+            }
+        }).observeOn(Schedulers.io()).subscribe(new Subscriber<Integer>() {
+            @Override
+            public void onCompleted() {
+                Log.i(TAG, "onCompleted: ");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Integer integer) {
+                Log.i(TAG, "onNext: " + integer.toString());
+            }
+        });
+    }
+
+    //range operator
+    private void rangeOperation() {
+        Observable observable = Observable.range(1, 11);
+        observable.subscribe(new Subscriber<Integer>() {
+            @Override
+            public void onCompleted() {
+                Log.i(TAG, "onCompleted: ");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Integer o) {
+                Log.i(TAG, "o.toString()" + o.toString());
+            }
+        });
+    }
+
+    //just operator
+    private void justOperation() {
+        Integer[] item1 = {1, 2, 3, 4, 5};
+        Integer[] item2 = {8, 9, 10, 10, 10};
+        Observable observable = Observable.just(item1, item2);
+        observable.subscribe(new Subscriber<Integer[]>() {
+            @Override
+            public void onCompleted() {
+                Log.i(TAG, "onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i(TAG, "onError: ");
+            }
+
+            @Override
+            public void onNext(Integer[] o) {
+                Log.i(TAG, "onNext: ");
+                for (int j = 0; j < o.length; j ++) {
+                    Log.i(TAG, o[j].toString());
+                }
+            }
+        });
     }
 
     //interval operator
