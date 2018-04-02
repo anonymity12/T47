@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.concurrent.TimeUnit;
+
 import rx.Subscriber;
 import rx.Observable;
 import rx.functions.Action1;
@@ -14,6 +16,7 @@ import rx.functions.Action1;
  * 1. test Rx on Android App ok
  * 2. write some code by hand
  * 3. use from operator
+ * 4. interval操作符
  */
 
 public class RxDemoActivity extends Activity{
@@ -24,8 +27,21 @@ public class RxDemoActivity extends Activity{
         super.onCreate(savedInstanceState);
 
 //        rxJavaCreate();
-        fromOperation();
+//        fromOperation();
+        intervalOperation();
     }
+
+    //interval operator
+    private void intervalOperation() {
+        Observable observable = Observable.interval(1, 1, TimeUnit.SECONDS);
+        observable.subscribe(new Action1() {
+            @Override
+            public void call(Object o) {
+                Log.i(TAG, o.toString());
+            }
+        });
+    }
+
 
     //from操作符
     private void fromOperation(){
