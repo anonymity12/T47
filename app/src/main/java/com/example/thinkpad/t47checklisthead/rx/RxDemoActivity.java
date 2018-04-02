@@ -1,21 +1,23 @@
 package com.example.thinkpad.t47checklisthead.rx;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.widget.ImageView;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.thinkpad.t47checklisthead.R;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by paul on 30/03/2018.
@@ -27,38 +29,49 @@ import io.reactivex.schedulers.Schedulers;
  * 6. 加载图片
  * 7. 基本模式：observable.subscribe(observer);
  * 8. chain programming
+ * 9. a sample of using rx for mainUI thread's widget, like button
  */
 
-public class RxDemoActivity extends Activity {
+public class RxDemoActivity extends Activity implements View.OnClickListener {
     private static final String TAG = "RxDemoActivity";
-    private ImageView img;
+    private Button button;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rx);
-        img = findViewById(R.id.imageView);
-        Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> e) throws Exception {
-                e.onNext("you are great");
-                e.onNext("you are top one");
-                e.onNext("unsubscribe");
-                e.onNext("am I show out?");
-                e.onComplete();
-            }
-        })
-                .subscribeOn(Schedulers.io())
+        button = findViewById(R.id.button);
+        button.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        final long count = 3;
+        Observable.interval(0, 1, TimeUnit.SECONDS)
+                .take(count + 1)
+                .map(new Function<Long, Long>() {
+                    public Long apply(@NonNull Long aLong) throws Exception {
+                        return count - aLong;
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        button.setEnabled(false);
+                        button.setTextColor(Color.BLACK);
+                    }
+                })
+                .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(String s) {
-                        Log.e(TAG, "onNext: "+s );
+                    public void onNext(Long aLong) {
+                        button.setText("Remaining" + aLong + "s");
                     }
 
                     @Override
@@ -68,11 +81,10 @@ public class RxDemoActivity extends Activity {
 
                     @Override
                     public void onComplete() {
-                        Log.e(TAG, "onComplete: !!!" );
+                        button.setEnabled(true);
+                        button.setTextColor(Color.RED);
+                        button.setText("Send SMS now");
                     }
                 });
     }
-
-
-
 }
