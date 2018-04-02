@@ -1,15 +1,27 @@
 package com.example.thinkpad.t47checklisthead.rx;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
 
+import com.example.thinkpad.t47checklisthead.R;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import rx.Scheduler;
-import rx.Subscriber;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import rx.*;
 import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -21,22 +33,87 @@ import rx.schedulers.Schedulers;
  * 3. use from operator
  * 4. interval操作符
  * 5. just, range, filter
+ * 6. 加载图片
  */
 
 public class RxDemoActivity extends Activity{
     private static final String TAG = "RxDemoActivity";
+    private ImageView img;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_rx);
+        img = findViewById(R.id.imageView);
 
 //        rxJavaCreate();
 //        fromOperation();
 //        intervalOperation();
 //        justOperation();
 //        rangeOperation();
-        filterOperation();
+//        filterOperation();
+        loadingImg("http://pic38.nipic.com/20140228/5571398_215900721128_2.jpg")
+                .observeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<byte[]>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i(TAG, "onCompleted: !!!!");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(byte[] bytes) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        img.setImageBitmap(bitmap);
+                    }
+                });
+
     }
+
+    private Observable<byte[]> loadingImg(final String imgPath) {
+        return Observable.create(new Observable.OnSubscribe<byte[]>() {
+            @Override
+            public void call(final Subscriber<? super byte[]> subscriber) {
+                if (!subscriber.isUnsubscribed()) {
+                    OkHttpClient client = new OkHttpClient();
+                    final Request request = new Request.Builder().url(imgPath).build();
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            subscriber.onError(e);
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                byte[] bytes = response.body().bytes();
+                                if (bytes != null) {
+                                    subscriber.onNext(bytes);
+                                }
+                            }
+                            subscriber.onCompleted();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     private void filterOperation() {
         Observable.just(1,2,3,4,5,6,7,8,9,0).filter(new Func1<Integer, Boolean>() {
