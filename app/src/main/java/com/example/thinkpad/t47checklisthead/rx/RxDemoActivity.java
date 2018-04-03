@@ -4,12 +4,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.thinkpad.t47checklisthead.R;
 import com.example.thinkpad.t47checklisthead.rx.bean.NetBean;
 import com.example.thinkpad.t47checklisthead.rx.bean.UserBean;
 import com.example.thinkpad.t47checklisthead.rx.bean.UserParam;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -34,47 +40,39 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * 9. a sample of using rx for mainUI thread's widget, like button
  * 10. hensen sample login to httpbin.org
  * 11. T47: merge rx into master
+ * 12. RxJava2与RxBinding的使用，优化搜索请求，textChanges
  */
 
 public class RxDemoActivity extends AppCompatActivity {
     private static final String TAG = "RxDemoActivity";
     ApiService apiService;
     TextView tv_text;
+    EditText editText;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rx);
         tv_text = findViewById(R.id.tv_text);
-        //retrofit
-        apiService = new Retrofit.Builder()
-                .baseUrl("https://httpbin.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-                .create(ApiService.class);
+        editText = findViewById(R.id.editText);
 
-        //rxjava
-        UserParam param = new UserParam("hensen", "123456");
-        Observable.just(param)
-                .flatMap(new Function<UserParam, ObservableSource<NetBean>>() {
+        RxTextView.textChanges(editText)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .switchMap(new Function<CharSequence, ObservableSource<List<String>>>() {
                     @Override
-                    public ObservableSource<NetBean> apply(@NonNull UserParam userParam) throws Exception {
-                        return apiService.getUserInfo(userParam.getParam1(), userParam.getParam2());
+                    public ObservableSource<List<String>> apply(CharSequence charSequence) throws Exception {
+                        List<String> list = new ArrayList<String>();
+                        list.add("1024");
+                        list.add("2018");
+                        return Observable.just(list);
                     }
                 })
-                .flatMap(new Function<NetBean, ObservableSource<UserBean>>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<String>>() {
                     @Override
-                    public ObservableSource<UserBean> apply(NetBean netBean) throws Exception {
-                        UserBean user = new UserBean(netBean.getForm().getUsername(), netBean.getForm().getPassword());
-                        return Observable.just(user);
-                    }
-                })
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<UserBean>() {
-                    @Override
-                    public void accept(@NonNull UserBean userBean) throws Exception {
-                        tv_text.setText("用户名" + userBean.getUsername() + "--密码" + userBean.getPasswrod());
+                    public void accept(List<String> strings) throws Exception {
+                        System.out.println(strings.toString());
                     }
                 });
     }
