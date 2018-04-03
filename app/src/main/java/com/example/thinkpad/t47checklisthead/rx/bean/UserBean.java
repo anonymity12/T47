@@ -8,7 +8,7 @@ import com.google.gson.*;
 public class UserBean {
     private String username;
     private String passwrod;
-    public UserBean(String passwrod, String username) {
+    public UserBean(String username, String passwrod) {
         this.passwrod = passwrod;
         this.username = username;
     }
