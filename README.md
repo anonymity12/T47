@@ -68,3 +68,10 @@ for detail, see also: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de8
 createNewFileInAndroid
 
 <img src="https://github.com/anonymity12/T47/blob/master/img/createNewFileInAndroid.png" width = "625" height = "70" alt="图片名称" align=center />
+
+
+###  * 10. hensen sample login to httpbin.org
+
+RxJava ok
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/hensenRxDemoByHttpBin.gif" width = "499" height = "853" alt="图片名称" align=center />
