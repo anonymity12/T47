@@ -33,6 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * 8. chain programming
  * 9. a sample of using rx for mainUI thread's widget, like button
  * 10. hensen sample login to httpbin.org
+ * 11. T47: merge rx into master
  */
 
 public class RxDemoActivity extends AppCompatActivity {
