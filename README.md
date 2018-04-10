@@ -4,7 +4,10 @@
 
 ###  * 11. show u how to find screen size
 
-![这里写图片描述](https://img-blog.csdn.net/20180404115430559?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3BhdWxrZzEy/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+github won't allow outside pic link, so click to visit
+
+https://gitee.com/paulkg12/tuku/blob/master/clipboard.png
+
 
 <img src="https://gitee.com/paulkg12/tuku/blob/master/clipboard.png" width = "400" height = "300" alt="图片名称" align=center />
 
