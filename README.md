@@ -1,5 +1,8 @@
 # T47
 
+###  * 3. show u how to get Array by reflection
+
+
 ### * 12. show u how to use view stub
 
 ###  * 11. show u how to find screen size

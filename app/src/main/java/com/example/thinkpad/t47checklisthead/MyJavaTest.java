@@ -1,5 +1,6 @@
 package com.example.thinkpad.t47checklisthead;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -10,35 +11,26 @@ import java.util.List;
  * Created by paul on 23/03/2018.
  * 1. show u how to get method generic return type.
  * 2. show u how to get method generic parameter type.
+ * 3. show u how to get Array by reflection
  */
 
 public class MyJavaTest {
-    public static void main(String[] args) throws NoSuchMethodException {
-        Method method = MyClass.class.getMethod("getStringList", List.class);
-        //we want the generic param type contained in this method.
-        Type [] genericParameterTypes = method.getGenericParameterTypes();
+    public static void main(String[] args) throws NoSuchMethodException, ClassNotFoundException {
+        //tt: creating arrays
+        int[] intArray = (int[]) Array.newInstance(int.class, 3);
+        //tt： access arrays
+        Array.set(intArray, 0, 124);
+        //tt: obtaining the class object of an array
+        Class stringArrayClass = String[].class;
+        //tt: not so straightforward way is using Class.forName();
+        Class intArray2 = Class.forName("[I");//tt: so [D is double, [F for float;
+        // but when u need more than primitives
+        Class stringArrayClass2 = Class.forName("[Ljava.lang.String;");//tt: so [Lcom.paul.MyClass; is ok,too
 
-        for (Type genericParameterType : genericParameterTypes) {
-            if (genericParameterType instanceof ParameterizedType) {
-                ParameterizedType aType = (ParameterizedType) genericParameterType;
-                Type [] parameterArgTypes = aType.getActualTypeArguments();
-                for (Type parameterArgType : parameterArgTypes) {
-                    Class parameterArgClass = (Class) parameterArgType;
-                    System.out.print(parameterArgClass);
-
-                }
-            }
-        }
-
-
-    }
-
-    class MyClass {
-
-        protected List<String> stringList = new ArrayList<>();
-
-        public void getStringList(List<Integer> param) {
-            return;
-        }
+        //tt: obtaining the component type of an Array
+        String[] strings = new String[3];
+        Class stringArrayClass3 = strings.getClass();
+        Class stringArrayComponentType = stringArrayClass3.getComponentType();
+        System.out.println(stringArrayComponentType);//output: class java.lang.String
     }
 }
