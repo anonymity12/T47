@@ -16,6 +16,7 @@ import java.util.concurrent.FutureTask;
  * 2. show u how to get method generic parameter type.
  * 3. show u how to get Array by reflection
  * 4. show u how to use Future Task/ multithreading
+ * J5. test can we use digit as variable name
  */
 
 public class MyJavaTest implements Callable<Integer>{
