@@ -1,5 +1,22 @@
 # T47
 
+### * J4.  4. show u how to use Future Task/ multithreading
+
+###  * 3. show u how to get Array by reflection
+
+
+### * 12. show u how to use view stub
+
+###  * 11. show u how to find screen size
+
+github won't allow outside pic link, so click to visit
+
+https://gitee.com/paulkg12/tuku/blob/master/clipboard.png
+
+
+<img src="https://gitee.com/paulkg12/tuku/blob/master/clipboard.png" width = "400" height = "300" alt="图片名称" align=center />
+
+
 此工程包含一些简单的自定义view.
 
 
@@ -68,3 +85,12 @@ for detail, see also: http://note.youdao.com/noteshare?id=9b79e7844217dd6c4d0de8
 createNewFileInAndroid
 
 <img src="https://github.com/anonymity12/T47/blob/master/img/createNewFileInAndroid.png" width = "625" height = "70" alt="图片名称" align=center />
+
+
+###  * 10. hensen sample login to httpbin.org
+
+RxJava ok
+
+<img src="https://github.com/anonymity12/T47/blob/master/img/hensenRxDemoByHttpBin.gif" width = "250" height = "425" alt="图片名称" align=center />
+
+

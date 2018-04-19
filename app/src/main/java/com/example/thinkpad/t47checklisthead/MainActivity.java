@@ -16,8 +16,10 @@ import android.os.PersistableBundle;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -37,20 +39,27 @@ import java.io.IOException;
  * 7. Test AIDL by jinliang gao
  * 8. Using messenger # Android art c2.4.3 @03192018
  * 9. show u how to write file in Android.
+ * 11. show u how to find screen size
+ * 12. show u how to use view stub
  */
 public class MainActivity extends AppCompatActivity {
-    private static File sFile;
-    private static FileWriter fileWriter = null;
+    private static final String TAG = "MainActivity";
+
+    private ViewStub mViewStub;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/init_fake.txt");
-        try {
-            fileWriter = new FileWriter(sFile,true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        setContentView(R.layout.act_test_viewstub);
+        mViewStub = findViewById(R.id.act_test_viewstub_viewstub);
+        Log.e(TAG, "onCreate: viewstub" );
+        findViewById(R.id.act_test_viewstub_tv_show).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View layoutView;
+                layoutView = mViewStub.inflate();
+                Log.i(TAG, "onClick: " + layoutView.getId());
+            }
+        });
     }
-
 }
