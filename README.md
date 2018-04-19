@@ -1,5 +1,16 @@
 # T47
 
+###  * 13. show u how to use nfc on samsung
+
+lg wifi and nfc are all broken
+
+run on samsung, the error is
+
+```
+Caused by: java.lang.RuntimeException: Tag incorrectly enumerated as MIFARE Classic, SAK = 32
+```
+
+
 ### * J4.  4. show u how to use Future Task/ multithreading
 
 ###  * 3. show u how to get Array by reflection

@@ -23,6 +23,6 @@ public class MyJavaTest {
     public static void main(String[] args) {
         int     k1, l1, l2, na, kh, nf, ip, iw, ido, idl1;
         k1 = 2;
-        11 = 3;
+        //11 = 3;
     }
 }
