@@ -17,12 +17,16 @@ import java.util.concurrent.FutureTask;
  * 3. show u how to get Array by reflection
  * 4. show u how to use Future Task/ multithreading
  * J5. test can we use digit as variable name: we can't
+ * J6. try to solve qiang ge's question on AbstractList, no good solution.
  */
 
 public class MyJavaTest {
     public static void main(String[] args) {
-        int     k1, l1, l2, na, kh, nf, ip, iw, ido, idl1;
-        k1 = 2;
-        //11 = 3;
+        ArrayList<String > stringArrayList = new ArrayList<>();
+        stringArrayList.add("str1");
+        stringArrayList.add("str2");
+        stringArrayList.add("str3");
+
+
     }
 }
