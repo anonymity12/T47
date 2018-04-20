@@ -1,5 +1,9 @@
 # T47
 
+### * 14. test ThreadLocal
+
+![](https://upload-images.jianshu.io/upload_images/11614105-95add62e2895a0cf.png) 
+
 ###  * 13. show u how to use nfc on samsung
 
 lg wifi and nfc are all broken
