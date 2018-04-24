@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 
 import com.example.thinkpad.t47checklisthead.fragment.ContentFragment;
+import com.example.thinkpad.t47checklisthead.fragment.WalkingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ import yalantis.com.sidemenu.util.ViewAnimator;
  * 15。 姿态识别，毕业设计相关代码
  */
 public class MainActivity extends AppCompatActivity  implements ViewAnimator.ViewAnimatorListener  {
+    private static final String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private List<SlideMenuItem> list = new ArrayList<>();
@@ -180,7 +183,11 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
             case ContentFragment.CLOSE:
                 return screenShotable;
             case ContentFragment.WALKING:
-                return
+                // TODO: 2018/4/24
+                Log.d(TAG, "onSwitch: fragment walking");
+                WalkingFragment walkingFragment = WalkingFragment.newInstance("arg");
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, walkingFragment).commit();
+                return walkingFragment;
             default:
                 return replaceFragment(screenShotable, position);//tt: guess position is where we click
         }
