@@ -83,11 +83,11 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
     private void createMenuList() {
         SlideMenuItem menuItem0 = new SlideMenuItem(ContentFragment.CLOSE, R.drawable.ic_close);
         list.add(menuItem0);
-        SlideMenuItem menuItem = new SlideMenuItem(ContentFragment.BUILDING, R.drawable.ic_walk);
+        SlideMenuItem menuItem = new SlideMenuItem(ContentFragment.WALKING, R.drawable.ic_walk);
         list.add(menuItem);
-        SlideMenuItem menuItem2 = new SlideMenuItem(ContentFragment.BOOK, R.drawable.ic_cliff_jumping);
+        SlideMenuItem menuItem2 = new SlideMenuItem(ContentFragment.STUMBLE, R.drawable.ic_cliff_jumping);
         list.add(menuItem2);
-        SlideMenuItem menuItem3 = new SlideMenuItem(ContentFragment.PAINT, R.drawable.ic_airline_seat_legroom_extra);
+        SlideMenuItem menuItem3 = new SlideMenuItem(ContentFragment.SIT, R.drawable.ic_airline_seat_legroom_extra);
         list.add(menuItem3);
     }
 
@@ -179,6 +179,8 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         switch (slideMenuItem.getName()) {
             case ContentFragment.CLOSE:
                 return screenShotable;
+            case ContentFragment.WALKING:
+                return
             default:
                 return replaceFragment(screenShotable, position);//tt: guess position is where we click
         }

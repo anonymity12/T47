@@ -20,9 +20,9 @@ import yalantis.com.sidemenu.interfaces.ScreenShotable;
 
 public class ContentFragment extends android.support.v4.app.Fragment implements ScreenShotable {
     public static final String CLOSE = "Close";
-    public static final String BUILDING = "Building";
-    public static final String BOOK = "Book";
-    public static final String PAINT = "Paint";
+    public static final String WALKING = "Walking";
+    public static final String STUMBLE = "Stumble";
+    public static final String SIT = "Sit";
     public static final String CASE = "Case";
     public static final String SHOP = "Shop";
     public static final String PARTY = "Party";
