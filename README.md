@@ -1,5 +1,15 @@
 # T47
 
+### now doing and next todo
+
+graduatio related
+
+gonna todo:
+
+- [x] use constraint layout for fragment walking.
+- [x] add sensor data text view.
+- [ ] add chart view 2018-04-25 11:50:26
+
 ### * 14. test ThreadLocal
 
 ![](https://upload-images.jianshu.io/upload_images/11614105-95add62e2895a0cf.png) 
