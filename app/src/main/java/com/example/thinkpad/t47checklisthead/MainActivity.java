@@ -47,6 +47,7 @@ import yalantis.com.sidemenu.util.ViewAnimator;
  * 13. show u how to use nfc on samsung
  * 14. test ThreadLocal
  * 15。 姿态识别，毕业设计相关代码
+ * 16. graduation; adding lineChartView
  */
 public class MainActivity extends AppCompatActivity  implements ViewAnimator.ViewAnimatorListener  {
     private static final String TAG = "MainActivity";

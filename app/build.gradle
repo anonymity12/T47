@@ -49,5 +49,6 @@ dependencies {
     compile 'com.jakewharton.rxbinding2:rxbinding-design:2.0.0'
     compile 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0'
     compile 'com.github.ozodrukh:CircularReveal:1.0.4'
-    implementation project(':library')
+    implementation project(':library')//the animation lib
+    implementation project(':lib')//the chart view lib
 }
