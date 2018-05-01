@@ -184,7 +184,6 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
             case ContentFragment.CLOSE:
                 return screenShotable;
             case ContentFragment.WALKING:
-                // TODO: 2018/4/24
                 Log.d(TAG, "onSwitch: fragment walking");
                 WalkingFragment walkingFragment = WalkingFragment.newInstance("arg");
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, walkingFragment).commit();

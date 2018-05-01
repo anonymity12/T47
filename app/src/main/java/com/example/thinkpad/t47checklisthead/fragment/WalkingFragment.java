@@ -19,12 +19,14 @@ import android.widget.TextView;
 
 import com.example.thinkpad.t47checklisthead.R;
 import com.example.thinkpad.t47checklisthead.utils.Constants;
+import com.example.thinkpad.t47checklisthead.view.SplineChart01View;
 
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 
 /**
  * Created by paul on 2018/4/24.
  * optional improvement: using dataBiding feature 2018-04-25 09:25:16
+ * todo : use chart view in this fragment
  */
 
 public class WalkingFragment extends Fragment implements ScreenShotable,SensorEventListener {
@@ -32,7 +34,9 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
     private View containerView;
     private Bitmap bitmap;
     private String argString;
+    double[][] xData;
     TextView xValueText, yValueText, zValueText;
+    SplineChart01View splineChart01View;
 
 
 
@@ -60,6 +64,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         xValueText = rootView.findViewById(R.id.x);
         yValueText = rootView.findViewById(R.id.y);
         zValueText = rootView.findViewById(R.id.z);
+        splineChart01View = rootView.findViewById(R.id.spline_chart_view);
         return rootView;
     }
     @Override
@@ -99,6 +104,9 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             xValueText.setText(x + "");
             yValueText.setText(y + "");
             zValueText.setText(z + "");
+            //todo store x value to a double[][] then refresh UI
+            xData = storeXData(event.values[0]);
+            splineChart01View.setDataSeries(xData);
         }
 
     }
