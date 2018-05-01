@@ -154,7 +154,7 @@ public class SplineChart01View extends DemoView {
 			chart.getDataAxis().setAxisSteps(5);
 			
 			//标签轴最大值
-			chart.setCategoryAxisMax(10);	
+			chart.setCategoryAxisMax(30);
 			//标签轴最小值
 			chart.setCategoryAxisMin(0);	
 			
