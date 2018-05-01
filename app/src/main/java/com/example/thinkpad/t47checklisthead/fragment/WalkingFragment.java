@@ -34,7 +34,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
     private View containerView;
     private Bitmap bitmap;
     private String argString;
-    double[][] xData;
+    float[] xData;
     TextView xValueText, yValueText, zValueText;
     SplineChart01View splineChart01View;
 
@@ -120,5 +120,13 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
     public void onStop() {
         super.onStop();
         mSensorManager.unregisterListener(this);
+    }
+    private float[] lineDataValues = new float[300];
+    public float[] storeXData(float value) {
+        for(int i = 0; i < lineDataValues.length - 1; i ++) {
+            lineDataValues[i] = lineDataValues[i+1];
+        }
+        lineDataValues[299] =value;
+        return lineDataValues;
     }
 }

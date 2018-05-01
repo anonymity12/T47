@@ -77,12 +77,14 @@ public class SplineChart01View extends DemoView {
 			initView();
 	 }
 
-	 public void setDataSeries(double[][] dataSeries){
+	 public void setDataSeries(float[] dataSeries){
 		chartData.clear();
 		 //线2的数据集
 		 List<PointD> linePoint = new ArrayList<PointD>();
-		 for (double[] data : dataSeries) {
-		 	linePoint.add(new PointD(data[0],data[1]));
+		 int xCoorValue = 0;
+		 for (float data : dataSeries) {
+		 	xCoorValue ++;
+		 	linePoint.add(new PointD(xCoorValue,data));
 		 }
 
 		 SplineData splineData = new SplineData("xData",linePoint,
