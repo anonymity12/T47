@@ -12,6 +12,10 @@ gonna todo:
 - [ ] add y and z data UI
 - [ ] read paper, analyze the data by 阈值分析；2018-05-01 11:52:21
 
+![](http://o6qns6y6x.bkt.clouddn.com/18-5-1/87855150.jpg)
+
+![](http://o6qns6y6x.bkt.clouddn.com/18-5-1/32526421.jpg)
+
 ### * 14. test ThreadLocal
 
 ![](https://upload-images.jianshu.io/upload_images/11614105-95add62e2895a0cf.png) 
