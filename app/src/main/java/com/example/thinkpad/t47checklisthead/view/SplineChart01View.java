@@ -91,7 +91,8 @@ public class SplineChart01View extends DemoView {
 				 Color.rgb(255, 165, 132) );
 
 
-		 splineData.setLabelVisible(true);
+		 splineData.setLabelVisible(false);
+/*
 		 splineData.setDotStyle(XEnum.DotStyle.RECT);
 		 splineData.getDotLabelPaint().setColor(Color.RED);
 
@@ -100,6 +101,7 @@ public class SplineChart01View extends DemoView {
 		 splineData.getLabelOptions().getBox().getBackgroundPaint().setColor(Color.GREEN);
 		 splineData.getLabelOptions().getBox().setRoundRadius(8);
 		 splineData.getLabelOptions().setLabelBoxStyle(XEnum.LabelBoxStyle.CAPROUNDRECT);
+*/
 
 		 chartData.add(splineData);
 		 invalidate();
@@ -107,8 +109,8 @@ public class SplineChart01View extends DemoView {
 	 
 	 private void initView()
 	 {
-			chartLabels();
-			chartDataSet();	
+//			chartLabels();
+//			chartDataSet();
 			chartRender();
 			
 			//綁定手势滑动事件
@@ -145,10 +147,11 @@ public class SplineChart01View extends DemoView {
 						
 			//坐标系
 			//数据轴最大值
-			chart.getDataAxis().setAxisMax(100);
-			//chart.getDataAxis().setAxisMin(0);
+			chart.getDataAxis().setAxisMax(50);
+			//tt: 数据轴最小值，应该是个负数
+			chart.getDataAxis().setAxisMin(-50);
 			//数据轴刻度间隔
-			chart.getDataAxis().setAxisSteps(10);
+			chart.getDataAxis().setAxisSteps(5);
 			
 			//标签轴最大值
 			chart.setCategoryAxisMax(10);	
@@ -205,8 +208,8 @@ public class SplineChart01View extends DemoView {
 				
 			});
 			//标题
-			chart.setTitle("Spline Chart");
-			chart.addSubtitle("(XCL-Charts Demo)");
+			chart.setTitle("姿态数据");
+			chart.addSubtitle("LSM6DSL加速器");
 			
 			//激活点击监听
 			chart.ActiveListenItemClick();

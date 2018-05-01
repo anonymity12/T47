@@ -105,7 +105,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             yValueText.setText(y + "");
             zValueText.setText(z + "");
             //todo store x value to a double[][] then refresh UI
-            xData = storeXData(event.values[0]);
+            xData = storeXData(x);
             splineChart01View.setDataSeries(xData);
         }
 
@@ -121,12 +121,11 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         super.onStop();
         mSensorManager.unregisterListener(this);
     }
-    private float[] lineDataValues = new float[300];
+    private float[] lineDataValues = new float[30];
     public float[] storeXData(float value) {
-        for(int i = 0; i < lineDataValues.length - 1; i ++) {
-            lineDataValues[i] = lineDataValues[i+1];
-        }
-        lineDataValues[299] =value;
+        //tt: great IDE implements
+        System.arraycopy(lineDataValues, 1, lineDataValues, 0, lineDataValues.length - 1);
+        lineDataValues[29] =value;
         return lineDataValues;
     }
 }
