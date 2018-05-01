@@ -8,7 +8,9 @@ gonna todo:
 
 - [x] use constraint layout for fragment walking.
 - [x] add sensor data text view.
-- [ ] add chart view 2018-04-25 11:50:26
+- [x] add chart view 2018-04-25 11:50:26
+- [ ] add y and z data UI
+- [ ] read paper, analyze the data by 阈值分析；2018-05-01 11:52:21
 
 ### * 14. test ThreadLocal
 
