@@ -23,10 +23,13 @@ import com.example.thinkpad.t47checklisthead.view.SplineChart01View;
 
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 
+import static com.example.thinkpad.t47checklisthead.view.SplineChart01View.DATE_TYPE_X;
+import static com.example.thinkpad.t47checklisthead.view.SplineChart01View.DATE_TYPE_Y;
+import static com.example.thinkpad.t47checklisthead.view.SplineChart01View.DATE_TYPE_Z;
+
 /**
  * Created by paul on 2018/4/24.
  * optional improvement: using dataBiding feature 2018-04-25 09:25:16
- * todo : use chart view in this fragment
  */
 
 public class WalkingFragment extends Fragment implements ScreenShotable,SensorEventListener {
@@ -34,7 +37,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
     private View containerView;
     private Bitmap bitmap;
     private String argString;
-    float[] xData;
+    float[] xData, yData, zData;
     TextView xValueText, yValueText, zValueText;
     SplineChart01View splineChart01View;
 
@@ -104,9 +107,12 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             xValueText.setText(x + "");
             yValueText.setText(y + "");
             zValueText.setText(z + "");
-            //todo store x value to a double[][] then refresh UI
             xData = storeXData(x);
-            splineChart01View.setDataSeries(xData);
+            yData = storeYData(y);
+            zData = storeZData(z);
+            splineChart01View.setDataSeries(xData,DATE_TYPE_X);
+            splineChart01View.setDataSeries(yData,DATE_TYPE_Y);
+            splineChart01View.setDataSeries(zData,DATE_TYPE_Z);
         }
 
     }
@@ -121,11 +127,24 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         super.onStop();
         mSensorManager.unregisterListener(this);
     }
-    private float[] lineDataValues = new float[30];
+
+    //tt: store(update) data in three array
+    private float[] lineDataValuesX = new float[10];
+    private float[] lineDataValuesY = new float[10];
+    private float[] lineDataValuesZ = new float[10];
     public float[] storeXData(float value) {
-        //tt: great IDE implements
-        System.arraycopy(lineDataValues, 1, lineDataValues, 0, lineDataValues.length - 1);
-        lineDataValues[29] =value;
-        return lineDataValues;
+        System.arraycopy(lineDataValuesX, 1, lineDataValuesX, 0, 9);
+        lineDataValuesX[9] =value;
+        return lineDataValuesX;
+    }
+    public float[] storeYData(float value) {
+        System.arraycopy(lineDataValuesY, 1, lineDataValuesY, 0, 9);
+        lineDataValuesY[9] =value;
+        return lineDataValuesY;
+    }
+    public float[] storeZData(float value) {
+        System.arraycopy(lineDataValuesZ, 1, lineDataValuesZ, 0, 9);
+        lineDataValuesZ[9] =value;
+        return lineDataValuesZ;
     }
 }
