@@ -9,9 +9,15 @@ gonna todo:
 - [x] use constraint layout for fragment walking.
 - [x] add sensor data text view.
 - [x] add chart view 2018-04-25 11:50:26
-- [ ] add y and z data UI
-- [ ] read paper, analyze the data by 阈值分析；2018-05-01 11:52:21
+- [x] add y and z data UI
+- [x] read paper, analyze the data by 阈值分析；2018-05-01 11:52:21
+- [ ] add hard ware part 2018-05-04 03:27:18
 
+### 16.1 fix UI don't have x y value bug
+
+![](http://o6qns6y6x.bkt.clouddn.com/18-5-4/76578214.jpg)
+
+### 16.0 basic display done
 
 ![](http://o6qns6y6x.bkt.clouddn.com/18-5-1/32526421.jpg)
 

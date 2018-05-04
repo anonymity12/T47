@@ -3,14 +3,14 @@ package com.example.thinkpad.t47checklisthead.fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.constraint.Group;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,8 +38,11 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
     private Bitmap bitmap;
     private String argString;
     float[] xData, yData, zData;
+    float av = 0;//tt: the average of three.
     TextView xValueText, yValueText, zValueText;
     SplineChart01View splineChart01View;
+    MediaPlayer mediaPlayer;
+    long thisAlertTime, lastAlertTime;
 
 
 
@@ -58,6 +61,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         argString = getArguments().getString(Constants.FRAGMENT_ARGS);
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),mSensorManager.SENSOR_DELAY_NORMAL);
+        mediaPlayer = MediaPlayer.create(getActivity(), R.raw.alert);
     }
 
     @Nullable
@@ -103,7 +107,8 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
-
+            av = (float) Math.sqrt(Math.pow(x,2) + Math.pow(y,2) + Math.pow(z,2));
+            judgeAndAlert(av);
             xValueText.setText(x + "");
             yValueText.setText(y + "");
             zValueText.setText(z + "");
@@ -126,6 +131,20 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
     public void onStop() {
         super.onStop();
         mSensorManager.unregisterListener(this);
+    }
+
+
+    public void judgeAndAlert(float av){
+        thisAlertTime = System.currentTimeMillis();
+
+        if (av > 35){
+            if (thisAlertTime - lastAlertTime > 5000){
+                //tt: make alert
+                mediaPlayer.start();
+                lastAlertTime = thisAlertTime;
+            }
+        }
+
     }
 
     //tt: store(update) data in three array

@@ -63,7 +63,12 @@ public class SplineChart01View extends DemoView {
     private static SplineData tempSpline;
 
     //线的数据集
+    List<PointD> linePointX = new ArrayList<PointD>();
+    List<PointD> linePointY = new ArrayList<PointD>();
+    List<PointD> linePointZ = new ArrayList<PointD>();
+    //tt: 统一的线数据集
     List<PointD> linePoint = new ArrayList<PointD>();
+
     //tt: 横坐标用途
     int xCoorValue = 0;
 
@@ -94,27 +99,28 @@ public class SplineChart01View extends DemoView {
     public void setDataSeries(float[] dataSeries, int type) {
 
         xCoorValue = 0;
-        linePoint.clear();
+        linePoint = new ArrayList<>();
         for (float data : dataSeries) {
             xCoorValue++;
             linePoint.add(new PointD(xCoorValue, data));
         }
+
         switch (type) {
             case DATE_TYPE_X:
-                tempSpline = chartData.get(0);
+                splineDataX.setLineDataSet(linePoint);
                 break;
             case DATE_TYPE_Y:
-                tempSpline = chartData.get(1);
+                splineDataY.setLineDataSet(linePoint);
                 break;
             case DATE_TYPE_Z:
-                tempSpline = chartData.get(2);
+                splineDataZ.setLineDataSet(linePoint);
                 break;
             default:
                 break;
         }
-
-        tempSpline.setLineDataSet(linePoint);
-        invalidate();
+        if (type == DATE_TYPE_Z) {
+            invalidate();
+        }
     }
 
 
@@ -122,11 +128,11 @@ public class SplineChart01View extends DemoView {
         chartRender();
         //tt: set up three line, make them all has no label
         splineDataX.setLabelVisible(false);
-        splineDataX.getLinePaint().setStrokeWidth(1);
+        splineDataX.getLinePaint().setStrokeWidth(3);
         splineDataY.setLabelVisible(false);
-        splineDataY.getLinePaint().setStrokeWidth(1);
+        splineDataY.getLinePaint().setStrokeWidth(3);
         splineDataZ.setLabelVisible(false);
-        splineDataZ.getLinePaint().setStrokeWidth(1);
+        splineDataZ.getLinePaint().setStrokeWidth(3);
         //tt: add spline whose data is empty but other setting are finished
         //tt: we will give them three data later in setDataSeries()
         chartData.add(splineDataX);
