@@ -12,6 +12,17 @@ gonna todo:
 - [x] add y and z data UI
 - [x] read paper, analyze the data by 阈值分析；2018-05-01 11:52:21
 - [ ] add hard ware part 2018-05-04 03:27:18
+- [ ] use more data and sensor 2018-05-06 05:47:23
+
+### 16.2 now we see we have these sensors on samsung s8
+
+确定了有以下几种传感器在我自己的手机上
+
+1. TYPE_ACCELEROMETER
+1. TYPE_GRAVITY
+1. TYPE_GYROSCOPE
+1. TYPE_STEP_DETECTOR
+
 
 ### 16.1 fix UI don't have x y value bug
 

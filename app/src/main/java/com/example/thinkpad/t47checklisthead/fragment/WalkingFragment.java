@@ -9,13 +9,16 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.R;
 import com.example.thinkpad.t47checklisthead.utils.Constants;
@@ -33,6 +36,8 @@ import static com.example.thinkpad.t47checklisthead.view.SplineChart01View.DATE_
  */
 
 public class WalkingFragment extends Fragment implements ScreenShotable,SensorEventListener {
+    // TODO: 2018/5/6 use wave to estimate the posture not just a point 
+    private static final String TAG = "WalkingFragment";
     SensorManager mSensorManager;
     private View containerView;
     private Bitmap bitmap;
@@ -60,7 +65,13 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         super.onCreate(savedInstanceState);
         argString = getArguments().getString(Constants.FRAGMENT_ARGS);
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),mSensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY),SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),SensorManager.SENSOR_DELAY_NORMAL);
+        }
+
         mediaPlayer = MediaPlayer.create(getActivity(), R.raw.alert);
     }
 
@@ -118,6 +129,21 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             splineChart01View.setDataSeries(xData,DATE_TYPE_X);
             splineChart01View.setDataSeries(yData,DATE_TYPE_Y);
             splineChart01View.setDataSeries(zData,DATE_TYPE_Z);
+        }
+        switch (event.sensor.getType()){
+            case Sensor.TYPE_ACCELEROMETER:
+                Log.d(TAG, "onSensorChanged: type is TYPE_ACCELEROMETER");
+                break;
+            case Sensor.TYPE_GRAVITY:
+                Log.d(TAG, "onSensorChanged: type is TYPE_GRAVITY");
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                Log.d(TAG, "onSensorChanged: type is TYPE_GYROSCOPE");
+                break;
+            case Sensor.TYPE_STEP_DETECTOR:
+                Log.d(TAG, "onSensorChanged: type is TYPE_STEP_DETECTOR");
+                break;
+
         }
 
     }
