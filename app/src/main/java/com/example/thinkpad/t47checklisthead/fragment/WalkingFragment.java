@@ -1,5 +1,6 @@
 package com.example.thinkpad.t47checklisthead.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,6 +12,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -33,10 +36,13 @@ import static com.example.thinkpad.t47checklisthead.view.SplineChart01View.DATE_
 /**
  * Created by paul on 2018/4/24.
  * optional improvement: using dataBiding feature 2018-04-25 09:25:16
+ *
+ * * this commit contain function like: get the frequency of sensor 2018-05-10 07:56:39
  */
 
 public class WalkingFragment extends Fragment implements ScreenShotable,SensorEventListener {
-    // TODO: 2018/5/6 use wave to estimate the posture not just a point 
+    // doing: 2018/5/6,10 use wave to estimate the posture not just a point, this should completed after reading brajidic
+    // complete: 2018/5/10 add service to replace this fragment
     private static final String TAG = "WalkingFragment";
     SensorManager mSensorManager;
     private View containerView;
@@ -48,6 +54,12 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
     SplineChart01View splineChart01View;
     MediaPlayer mediaPlayer;
     long thisAlertTime, lastAlertTime;
+    static long start_time;
+    static Handler handler;
+    long count;
+    Bundle b;
+    Message m = new Message();
+
 
 
 
@@ -56,6 +68,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         Bundle bundle = new Bundle();
         bundle.putString(Constants.FRAGMENT_ARGS, args);
         walkingFragment.setArguments(bundle);
+
         return walkingFragment;
 
     }
@@ -65,6 +78,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         super.onCreate(savedInstanceState);
         argString = getArguments().getString(Constants.FRAGMENT_ARGS);
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        start_time = System.currentTimeMillis();
         mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY),SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);
@@ -75,6 +89,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         mediaPlayer = MediaPlayer.create(getActivity(), R.raw.alert);
     }
 
+    @SuppressLint("HandlerLeak")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,6 +98,16 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         yValueText = rootView.findViewById(R.id.y);
         zValueText = rootView.findViewById(R.id.z);
         splineChart01View = rootView.findViewById(R.id.spline_chart_view);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+                Bundle b = msg.getData();
+                zValueText.setText(b.get("freFloat").toString());
+                super.handleMessage(msg);
+            }
+
+        };
         return rootView;
     }
     @Override
@@ -114,6 +139,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        count ++;
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
             float y = event.values[1];
@@ -129,20 +155,9 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             splineChart01View.setDataSeries(xData,DATE_TYPE_X);
             splineChart01View.setDataSeries(yData,DATE_TYPE_Y);
             splineChart01View.setDataSeries(zData,DATE_TYPE_Z);
-        }
-        switch (event.sensor.getType()){
-            case Sensor.TYPE_ACCELEROMETER:
-                Log.d(TAG, "onSensorChanged: type is TYPE_ACCELEROMETER");
-                break;
-            case Sensor.TYPE_GRAVITY:
-                Log.d(TAG, "onSensorChanged: type is TYPE_GRAVITY");
-                break;
-            case Sensor.TYPE_GYROSCOPE:
-                Log.d(TAG, "onSensorChanged: type is TYPE_GYROSCOPE");
-                break;
-            case Sensor.TYPE_STEP_DETECTOR:
-                Log.d(TAG, "onSensorChanged: type is TYPE_STEP_DETECTOR");
-                break;
+            float fre = (1000 / ((System.currentTimeMillis() - WalkingFragment.start_time) / count));
+            b.putFloat("freFloat",fre);
+            m.setData(b);
 
         }
 
