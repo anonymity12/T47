@@ -12,6 +12,13 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+/**
+* Monitor xyz data and alert at suitable time
+ * author: rongtian zheng
+ * create at: 05102018
+ * mail: 3060326200@qq.com
+* */
+
 public class MonitorService extends Service implements SensorEventListener {
     private static final String TAG = "MonitorService";
     FallMonitorAidl.Stub stub = new FallMonitorAidl.Stub() {
@@ -34,6 +41,7 @@ public class MonitorService extends Service implements SensorEventListener {
     int counter;//counter for count javArray 15 to 29
     static float nowRecord; //tt: use this for record sensor data, recordThread will use it
     static float[] standardFallTemplate = {0.3f, 0.2f};// TODO: 2018/5/11 add fall template
+    static Object lockObj = new Object();
 
 
     public MonitorService() {
@@ -46,12 +54,13 @@ public class MonitorService extends Service implements SensorEventListener {
         assert mSensorManager != null;
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mediaPlayer = MediaPlayer.create(this, R.raw.alert);
-        //now we create two thread use same lock
-        Object lockObj = new Object();
+        //now we first create alert thread use static lock
         // thread1:warningAlert(always waiting for 2's notify)
         new warningAlertThread(lockObj).start();
-        // thread2: recording thread, called when av > 35, and after record finish, it'll notify warningAlert thread.
-        new recordThread(lockObj).start();
+        // thread2: recording thread, called when av > 35,
+        // and after record finish, it'll notify warningAlert thread.
+        // see at onSensorChange(), this thread will start
+
 
 
     }
@@ -86,6 +95,7 @@ public class MonitorService extends Service implements SensorEventListener {
             //tt: another way:  we always execute above and choose to execute follow
             if (av > 30) {
                 //tt: start a recordThread
+                new recordThread(lockObj).start();
             }
         }
     }
