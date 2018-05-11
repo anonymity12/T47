@@ -80,13 +80,9 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         start_time = System.currentTimeMillis();
         mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY),SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_NORMAL);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),SensorManager.SENSOR_DELAY_NORMAL);
-        }
 
         mediaPlayer = MediaPlayer.create(getActivity(), R.raw.alert);
+        b = new Bundle();
     }
 
     @SuppressLint("HandlerLeak")
@@ -98,22 +94,24 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
         yValueText = rootView.findViewById(R.id.y);
         zValueText = rootView.findViewById(R.id.z);
         splineChart01View = rootView.findViewById(R.id.spline_chart_view);
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                // TODO Auto-generated method stub
-                Bundle b = msg.getData();
-                zValueText.setText(b.get("freFloat").toString());
-                super.handleMessage(msg);
-            }
 
-        };
         return rootView;
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.containerView = view.findViewById(R.id.container);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Log.d(TAG, "handleMessage: got fre!");
+                // TODO Auto-generated method stub
+                Bundle b = msg.getData();
+                zValueText.setText(b.get("freFloat").toString());
+            }
+
+        };
     }
     @Override
     public void takeScreenShot() {
@@ -148,7 +146,6 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             judgeAndAlert(av);
             xValueText.setText(x + "");
             yValueText.setText(y + "");
-            zValueText.setText(z + "");
             xData = storeXData(x);
             yData = storeYData(y);
             zData = storeZData(z);
@@ -156,6 +153,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             splineChart01View.setDataSeries(yData,DATE_TYPE_Y);
             splineChart01View.setDataSeries(zData,DATE_TYPE_Z);
             float fre = (1000 / ((System.currentTimeMillis() - WalkingFragment.start_time) / count));
+            Log.d(TAG, "onSensorChanged: the fre is: " + fre);
             b.putFloat("freFloat",fre);
             m.setData(b);
 
