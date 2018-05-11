@@ -19,6 +19,14 @@ import android.util.Log;
  * mail: 3060326200@qq.com
 * */
 
+/** todo solve follow thread bug!!!
+* FATAL EXCEPTION: Thread-7
+ Process: com.example.thinkpad.t47checklisthead, PID: 20194
+ java.lang.IllegalMonitorStateException: object not locked by thread before wait()
+ at java.lang.Object.wait(Native Method)
+ at com.example.thinkpad.t47checklisthead.MonitorService$warningAlertThread.run(MonitorService.java:173)
+* */
+
 public class MonitorService extends Service implements SensorEventListener {
     private static final String TAG = "MonitorService";
     FallMonitorAidl.Stub stub = new FallMonitorAidl.Stub() {
@@ -68,6 +76,7 @@ public class MonitorService extends Service implements SensorEventListener {
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
+        Log.d(TAG, "onBind: service onBind!!!!");
         return stub;
     }
 

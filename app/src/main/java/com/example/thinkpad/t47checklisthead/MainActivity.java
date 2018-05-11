@@ -1,9 +1,13 @@
 package com.example.thinkpad.t47checklisthead;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -47,7 +51,7 @@ import yalantis.com.sidemenu.util.ViewAnimator;
  * 13. show u how to use nfc on samsung
  * 14. test ThreadLocal
  * 15。 姿态识别，毕业设计相关代码
- * 16. graduation; adding lineChartView
+ * 16. bind MonitorService now, but MonitorService has thread problem in one test.
  */
 public class MainActivity extends AppCompatActivity  implements ViewAnimator.ViewAnimatorListener  {
     private static final String TAG = "MainActivity";
@@ -58,6 +62,17 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
     private ViewAnimator viewAnimator;
     private int res = R.mipmap.res_walk;
     private LinearLayout linearLayout;
+    ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d(TAG, "onServiceConnected: !!!!");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
 
     @Override
@@ -82,6 +97,12 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         setActionBar();
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
+        bindService(new Intent(this,MonitorService.class),serviceConnection,BIND_AUTO_CREATE);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
     }
 
     private void createMenuList() {
