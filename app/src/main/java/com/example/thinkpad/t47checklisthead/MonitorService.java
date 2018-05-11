@@ -10,6 +10,7 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 public class MonitorService extends Service implements SensorEventListener {
     private static final String TAG = "MonitorService";
@@ -26,12 +27,13 @@ public class MonitorService extends Service implements SensorEventListener {
     };
     SensorManager mSensorManager;
     MediaPlayer mediaPlayer;
-    float x,y,z,av;
-    float [] avArray = new float[30];
+    float x, y, z, av;
+    float[] avArray = new float[30];
     float[] javArray = new float[30];
     long thisAlertTime, lastAlertTime;
     int counter;//counter for count javArray 15 to 29
-
+    static float nowRecord; //tt: use this for record sensor data, recordThread will use it
+    static float[] standardFallTemplate = {0.3f, 0.2f};// TODO: 2018/5/11 add fall template
 
 
     public MonitorService() {
@@ -42,8 +44,14 @@ public class MonitorService extends Service implements SensorEventListener {
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         assert mSensorManager != null;
-        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mediaPlayer = MediaPlayer.create(this, R.raw.alert);
+        //now we create two thread use same lock
+        Object lockObj = new Object();
+        // thread1:warningAlert(always waiting for 2's notify)
+        new warningAlertThread(lockObj).start();
+        // thread2: recording thread, called when av > 35, and after record finish, it'll notify warningAlert thread.
+        new recordThread(lockObj).start();
 
 
     }
@@ -60,26 +68,24 @@ public class MonitorService extends Service implements SensorEventListener {
             x = event.values[0];
             y = event.values[1];
             z = event.values[2];
-            av = (float) Math.sqrt(Math.pow(x,2) + Math.pow(y,2) + Math.pow(z,2));
+            av = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
             storeData(av);
+            nowRecord = av;
 
-            //tt: another way
-            if (av > 30 ){
-                if (!eating) {
-                    last 15
-                }
-                trigerWindow();
-            }
             //tt: we always execute above and choose to execute follow
             if (!(counter > 0)) {
-                //when counter <= 0; actually is 0, then we'll
+                //when counter <= 0; actually is 0, then we'll start a recording
                 if (av > 35) {
                     counter = 15;
-                    while(counter > 0){
+                    while (counter > 0) {
                         javArray[30 - counter] = av;
-                        counter --;
+                        counter--;
                     }
                 }
+            }
+            //tt: another way:  we always execute above and choose to execute follow
+            if (av > 30) {
+                //tt: start a recordThread
             }
         }
     }
@@ -89,30 +95,78 @@ public class MonitorService extends Service implements SensorEventListener {
 
     }
 
-    void judgeAndAlert(float av){
-        thisAlertTime = System.currentTimeMillis();
 
-        if (av > 35){
-            if (thisAlertTime - lastAlertTime > 5000){
-                //tt: enter analyze zone
-                //tt: 1. copy array
-                System.arraycopy(avArray,14,javArray,0,15);
-
-                //tt: make alert
-                mediaPlayer.start();
-                lastAlertTime = thisAlertTime;
-            }
-        }
-
-    }
     float[] storeData(float value) {
         System.arraycopy(avArray, 1, avArray, 0, 29);
-        avArray[29] =value;
+        avArray[29] = value;
         return avArray;
     }
-    boolean isFall(float [] waitForJudgeArray) {
 
+    boolean isFall(float[] prisonArray) {
+        for (float prison : prisonArray) {
 
+        }
         return false;
     }
+
+    class recordThread extends Thread {
+        float[] javArrayInThread = new float[30];
+        int recordCounter = 15;
+        Object lockObj;
+
+        recordThread(Object lockObj) {
+            this.lockObj = lockObj;
+        }
+
+
+        @Override
+        public void run() {
+            super.run();
+            synchronized (lockObj){
+                System.arraycopy(avArray, 14, javArrayInThread, 0, 15);//tt: w: might muiltThread use avArray;
+                while (recordCounter > 0) {
+                    try {
+                        Thread.sleep(60); //tt: 1000 / 15(delay_normal frequency) =  66.66;
+                        javArrayInThread[30 - recordCounter] = nowRecord;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    recordCounter--;
+                }
+                //now recordCounter is 0; and we start to analyze javArrayInThread
+                //todo isFall(javArrayInThread)
+                if (isFall(javArrayInThread)) {
+                    lockObj.notify();
+                    Log.d(TAG, "run: fall detected, intrige alert");
+                }
+
+            }
+
+        }
+    }
+
+    class warningAlertThread extends Thread {
+        Object lockObj;
+
+        warningAlertThread(Object lockObj) {
+            super();
+            this.lockObj = lockObj;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            synchronized (lockObj) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+
 }
