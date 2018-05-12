@@ -7,10 +7,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
+
+import java.util.HashMap;
 
 /**
 * Monitor xyz data and alert at suitable time
@@ -50,7 +54,8 @@ public class MonitorService extends Service implements SensorEventListener {
     static float nowRecord; //tt: use this for record sensor data, recordThread will use it
     static float[] standardFallTemplate = {0.3f, 0.2f};// TODO: 2018/5/11 add fall template
     static Object lockObj = new Object();
-
+    SoundPool sp;
+    HashMap<Integer,Integer> hm;
 
     public MonitorService() {
     }
@@ -68,6 +73,8 @@ public class MonitorService extends Service implements SensorEventListener {
         // thread2: recording thread, called when av > 35,
         // and after record finish, it'll notify warningAlert thread.
         // see at onSensorChange(), this thread will start
+
+        initSoundPool();
 
 
 
@@ -90,20 +97,10 @@ public class MonitorService extends Service implements SensorEventListener {
             storeData(av);
             nowRecord = av;
 
-            //tt: we always execute above and choose to execute follow
-            if (!(counter > 0)) {
-                //when counter <= 0; actually is 0, then we'll start a recording
-                if (av > 35) {
-                    counter = 15;
-                    while (counter > 0) {
-                        javArray[30 - counter] = av;
-                        counter--;
-                    }
-                }
-            }
             //tt: another way:  we always execute above and choose to execute follow
             if (av > 30) {
                 //tt: start a recordThread
+                Log.d(TAG, ">>>>>>>av > 30!!!");
                 new recordThread(lockObj).start();
             }
         }
@@ -125,7 +122,29 @@ public class MonitorService extends Service implements SensorEventListener {
         for (float prison : prisonArray) {
 
         }
-        return false;
+        return true;
+    }
+
+    void initSoundPool() {
+        sp = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+        hm = new HashMap<>();
+        hm.put(1,sp.load(this,R.raw.alert,1));
+    }
+
+    void playSound(int sound) { // 获取AudioManager引用
+        AudioManager am = (AudioManager) this
+                .getSystemService(Context.AUDIO_SERVICE);
+        // 获取当前音量
+        float streamVolumeCurrent = am
+                .getStreamVolume(AudioManager.STREAM_MUSIC);
+        // 获取系统最大音量
+        float streamVolumeMax = am
+                .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        // 计算得到播放音量
+        float volume = streamVolumeCurrent / streamVolumeMax;
+        // 调用SoundPool的play方法来播放声音文件
+        Log.d(TAG, "playSound: gonna play");
+        sp.play(hm.get(sound), volume, volume, 1, 0, 1.5f);
     }
 
     class recordThread extends Thread {
@@ -178,7 +197,10 @@ public class MonitorService extends Service implements SensorEventListener {
             super.run();
             synchronized (lockObj) {
                 try {
-                    wait();
+                    Log.d(TAG, "run: alertThread waiting");
+                    lockObj.wait();
+                    Log.d(TAG, "run: alertThread alert!!");
+                    playSound(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
