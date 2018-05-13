@@ -105,29 +105,17 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         setActionBar();
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
-        //bindService(new Intent(this,MonitorService.class),serviceConnection,BIND_AUTO_CREATE);
-        startCameraKacha(this);
+        bindService(new Intent(this,MonitorService.class),serviceConnection,BIND_AUTO_CREATE);
+        Log.d("MonitorService", "onCreate: act looper is "+ getMainLooper());
+
 
     }
 
-    public static void startCameraKacha(Context c) {
-        final SoundPool soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
-        AudioManager mgr = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
-        float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        final float volume = streamVolumeCurrent / streamVolumeMax;
-        final int id = soundPool.load(c, R.raw.alert, 1);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                soundPool.play(id, volume, volume, 1, 0, 1f);
-            }
-        }, 20);
-    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unbindService(serviceConnection);
+        unbindService(serviceConnection);
     }
 
     private void createMenuList() {

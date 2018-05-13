@@ -10,7 +10,9 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -51,8 +53,7 @@ public class MonitorService extends Service implements SensorEventListener {
     static float nowRecord; //tt: use this for record sensor data, recordThread will use it
     static float[] standardFallTemplate = {0.3f, 0.2f};// TODO: 2018/5/11 add fall template
     static Object lockObj = new Object();
-    SoundPool sp;
-    HashMap<Integer,Integer> hm;
+
 
     public MonitorService() {
     }
@@ -71,14 +72,28 @@ public class MonitorService extends Service implements SensorEventListener {
         // and after record finish, it'll notify warningAlert thread.
         // see at onSensorChange(), this thread will start
 
-        initSoundPool();
-        
+        Log.d(TAG, "onCreate: ser looper is "+ getMainLooper());
         //test sound
         Log.d(TAG, "onCreate: playSound");
-        playSound(1);
+
+        startCameraKacha(this);
 
 
+    }
 
+    static void startCameraKacha(Context c) {
+        final SoundPool soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
+        AudioManager mgr = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+        float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        final float volume = streamVolumeCurrent / streamVolumeMax;
+        final int id = soundPool.load(c, R.raw.alert, 1);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                soundPool.play(id, volume, volume, 1, 0, 1f);
+            }
+        }, 20);
     }
 
     @Override
@@ -99,9 +114,13 @@ public class MonitorService extends Service implements SensorEventListener {
 
             //tt: another way:  we always execute above and choose to execute follow
             if (av > 30) {
-                //tt: start a recordThread
-                Log.d(TAG, ">>>>>>>av > 30!!!");
-                new recordThread(lockObj).start();
+                thisAlertTime = System.currentTimeMillis();
+                if (thisAlertTime - lastAlertTime > 3000){
+                    //tt: start a recordThread
+                    Log.d(TAG, ">>>>>>>av > 30!!!");
+                    new recordThread(lockObj).start();
+                    lastAlertTime = thisAlertTime;
+                }
             }
         }
     }
@@ -125,27 +144,7 @@ public class MonitorService extends Service implements SensorEventListener {
         return true;
     }
 
-    void initSoundPool() {
-        sp = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
-        hm = new HashMap<>();
-        hm.put(1,sp.load(this,R.raw.alert,1));
-    }
 
-    void playSound(int sound) { // 获取AudioManager引用
-        AudioManager am = (AudioManager) this
-                .getSystemService(Context.AUDIO_SERVICE);
-        // 获取当前音量
-        float streamVolumeCurrent = am
-                .getStreamVolume(AudioManager.STREAM_MUSIC);
-        // 获取系统最大音量
-        float streamVolumeMax = am
-                .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        // 计算得到播放音量
-        float volume = streamVolumeCurrent / streamVolumeMax;
-        // 调用SoundPool的play方法来播放声音文件
-        Log.d(TAG, "playSound: gonna play volume = " + volume);
-        sp.play(hm.get(sound), volume, volume, 1, -1, 1.f);
-    }
 
     class recordThread extends Thread {
         float[] javArrayInThread = new float[30];
@@ -172,6 +171,7 @@ public class MonitorService extends Service implements SensorEventListener {
 
                     recordCounter--;
                 }
+                Log.d(TAG, "run: array finish copy, 15th is: "+ javArrayInThread[14]);
                 //now recordCounter is 0; and we start to analyze javArrayInThread
                 //todo isFall(javArrayInThread)
                 if (isFall(javArrayInThread)) {
@@ -200,7 +200,7 @@ public class MonitorService extends Service implements SensorEventListener {
                     Log.d(TAG, "run: alertThread waiting");
                     lockObj.wait();
                     Log.d(TAG, "run: alertThread alert!!");
-                    playSound(1);
+                    startCameraKacha(MonitorService.this);//todo bug is:: ava.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare(); you should call it in Service main Thread
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
