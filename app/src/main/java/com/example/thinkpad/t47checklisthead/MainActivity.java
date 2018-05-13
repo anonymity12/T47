@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
+import android.os.Handler;
 
 import com.example.thinkpad.t47checklisthead.fragment.ContentFragment;
 import com.example.thinkpad.t47checklisthead.fragment.WalkingFragment;
@@ -105,10 +106,23 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
         //bindService(new Intent(this,MonitorService.class),serviceConnection,BIND_AUTO_CREATE);
-        sp = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+        startCameraKacha(this);
 
-        soundId = sp.load(this, R.raw.alert, 1);
+    }
 
+    public static void startCameraKacha(Context c) {
+        final SoundPool soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
+        AudioManager mgr = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+        float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        final float volume = streamVolumeCurrent / streamVolumeMax;
+        final int id = soundPool.load(c, R.raw.alert, 1);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                soundPool.play(id, volume, volume, 1, 0, 1f);
+            }
+        }, 20);
     }
     @Override
     protected void onDestroy() {
@@ -267,8 +281,7 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
     @Override
     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
         Log.d(TAG, "onLoadComplete: soundPool:sampleId:status:" + soundPool + sampleId + status);
-        initSoundPool();
-        playSound(1);
+        soundPool.play(sampleId, 0.9f, 0.9f, 1, -1, 1f);
     }
 }
 
