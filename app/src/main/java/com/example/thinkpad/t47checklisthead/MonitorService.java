@@ -23,13 +23,10 @@ import java.util.HashMap;
  * mail: 3060326200@qq.com
 * */
 
-/** todo solve follow thread bug!!!
-* FATAL EXCEPTION: Thread-7
- Process: com.example.thinkpad.t47checklisthead, PID: 20194
- java.lang.IllegalMonitorStateException: object not locked by thread before wait()
- at java.lang.Object.wait(Native Method)
- at com.example.thinkpad.t47checklisthead.MonitorService$warningAlertThread.run(MonitorService.java:173)
-* */
+/** todo solve follow bug!!!
+* *
+ * called playSound but no sound
+ * */
 
 public class MonitorService extends Service implements SensorEventListener {
     private static final String TAG = "MonitorService";
@@ -75,6 +72,10 @@ public class MonitorService extends Service implements SensorEventListener {
         // see at onSensorChange(), this thread will start
 
         initSoundPool();
+        
+        //test sound
+        Log.d(TAG, "onCreate: playSound");
+        playSound(1);
 
 
 
@@ -82,7 +83,6 @@ public class MonitorService extends Service implements SensorEventListener {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         Log.d(TAG, "onBind: service onBind!!!!");
         return stub;
     }
@@ -143,8 +143,8 @@ public class MonitorService extends Service implements SensorEventListener {
         // 计算得到播放音量
         float volume = streamVolumeCurrent / streamVolumeMax;
         // 调用SoundPool的play方法来播放声音文件
-        Log.d(TAG, "playSound: gonna play");
-        sp.play(hm.get(sound), volume, volume, 1, 0, 1.5f);
+        Log.d(TAG, "playSound: gonna play volume = " + volume);
+        sp.play(hm.get(sound), volume, volume, 1, -1, 1.f);
     }
 
     class recordThread extends Thread {

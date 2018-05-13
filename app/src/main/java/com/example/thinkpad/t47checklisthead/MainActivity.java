@@ -1,11 +1,14 @@
 package com.example.thinkpad.t47checklisthead;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +26,7 @@ import com.example.thinkpad.t47checklisthead.fragment.ContentFragment;
 import com.example.thinkpad.t47checklisthead.fragment.WalkingFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -53,7 +57,7 @@ import yalantis.com.sidemenu.util.ViewAnimator;
  * 15。 姿态识别，毕业设计相关代码
  * 16. bind MonitorService now, but MonitorService has thread problem in one test.
  */
-public class MainActivity extends AppCompatActivity  implements ViewAnimator.ViewAnimatorListener  {
+public class MainActivity extends AppCompatActivity  implements ViewAnimator.ViewAnimatorListener,SoundPool.OnLoadCompleteListener  {
     private static final String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -73,6 +77,9 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
 
         }
     };
+    SoundPool sp;
+    HashMap<Integer,Integer> hm;
+    int soundId;
 
 
     @Override
@@ -97,12 +104,16 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         setActionBar();
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
-        bindService(new Intent(this,MonitorService.class),serviceConnection,BIND_AUTO_CREATE);
+        //bindService(new Intent(this,MonitorService.class),serviceConnection,BIND_AUTO_CREATE);
+        sp = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+
+        soundId = sp.load(this, R.raw.alert, 1);
+
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(serviceConnection);
+//        unbindService(serviceConnection);
     }
 
     private void createMenuList() {
@@ -232,5 +243,32 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         linearLayout.addView(view);
     }
 
+    void initSoundPool() {
+        hm = new HashMap<>();
+        hm.put(1,soundId);
+    }
+
+    void playSound(int sound) { // 获取AudioManager引用
+        AudioManager am = (AudioManager) this
+                .getSystemService(Context.AUDIO_SERVICE);
+        // 获取当前音量
+        float streamVolumeCurrent = am
+                .getStreamVolume(AudioManager.STREAM_MUSIC);
+        // 获取系统最大音量
+        float streamVolumeMax = am
+                .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        // 计算得到播放音量
+        float volume = streamVolumeCurrent / streamVolumeMax;
+        // 调用SoundPool的play方法来播放声音文件
+        Log.d(TAG, "playSound: gonna play volume = " + volume);
+        sp.play(hm.get(sound), volume, volume, 1, -1, 1.f);
+    }
+
+    @Override
+    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+        Log.d(TAG, "onLoadComplete: soundPool:sampleId:status:" + soundPool + sampleId + status);
+        initSoundPool();
+        playSound(1);
+    }
 }
 
