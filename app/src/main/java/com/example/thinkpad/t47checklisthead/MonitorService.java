@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -25,9 +26,9 @@ import java.util.HashMap;
  * mail: 3060326200@qq.com
 * */
 
-/** todo solve follow bug!!!
+/**
 * *
- * called playSound but no sound
+ *
  * */
 
 public class MonitorService extends Service implements SensorEventListener {
@@ -46,13 +47,69 @@ public class MonitorService extends Service implements SensorEventListener {
     SensorManager mSensorManager;
     MediaPlayer mediaPlayer;
     float x, y, z, av;
-    float[] avArray = new float[30];
-    float[] javArray = new float[30];
+    float[] avArray = new float[50];
+    float[] javArray = new float[50];
     long thisAlertTime, lastAlertTime;
     int counter;//counter for count javArray 15 to 29
     static float nowRecord; //tt: use this for record sensor data, recordThread will use it
-    static float[] standardFallTemplate = {0.3f, 0.2f};// TODO: 2018/5/11 add fall template
+    static float[] standardFallTemplate = {11.796272f,
+            11.201355f,
+            8.593473f,
+            10.219366f,
+            9.2791f,
+            9.939259f,
+            9.621416f,
+            9.870411f,
+            10.071402f,
+            11.31397f,
+            10.717559f,
+            9.473474f,
+            11.129844f,
+            7.171493f,
+            8.013452f,
+            9.39375f,
+            11.814729f,
+            3.605548f,
+            4.843654f,
+            10.40942f,
+            16.104265f,
+            13.269487f,
+            11.345426f,
+            9.042633f,
+            29.014047f,
+            8.127797f,
+            8.111951f,
+            13.975922f,
+            6.007527f,
+            14.146987f,
+            9.623895f,
+            8.293974f,
+            10.061343f,
+            10.044915f,
+            13.742053f,
+            9.298467f,
+            8.216829f,
+            11.955499f,
+            11.277865f,
+            8.307464f,
+            10.383641f,
+            9.89646f,
+            9.974058f,
+            9.474529f,
+            10.903182f,
+            9.807233f,
+            10.311951f,
+            10.056973f,
+            10.127024f,
+            9.276332f};
     static Object lockObj = new Object();
+    private AudioManager mgr;
+    private SoundPool soundPool;
+    private float streamVolumeCurrent;
+    private float streamVolumeMax;
+    private float volume;
+    private int soundId;
+    private Handler myAlertHandler;
 
 
     public MonitorService() {
@@ -77,6 +134,14 @@ public class MonitorService extends Service implements SensorEventListener {
         Log.d(TAG, "onCreate: playSound");
 
         startCameraKacha(this);
+
+        soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
+        mgr = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+        streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        volume = streamVolumeCurrent / streamVolumeMax;
+        soundId = soundPool.load(this, R.raw.alert, 1);
+        myAlertHandler = new Handler();
 
 
     }
@@ -132,23 +197,32 @@ public class MonitorService extends Service implements SensorEventListener {
 
 
     float[] storeData(float value) {
-        System.arraycopy(avArray, 1, avArray, 0, 29);
-        avArray[29] = value;
+        System.arraycopy(avArray, 1, avArray, 0, 49);
+        avArray[49] = value;
         return avArray;
     }
 
     boolean isFall(float[] prisonArray) {
+        double sum = 0;
+        int x = 0;
         for (float prison : prisonArray) {
-
+            sum = sum + Math.sqrt(Math.pow((double)(prison - standardFallTemplate[x]),2));
+            x ++;
         }
-        return true;
+        Toast.makeText(this,"bias sum is: " + sum,Toast.LENGTH_SHORT).show();
+        //tt: now we assume that exceed 20 is fall
+        if (sum < 20) {
+            return true;
+        }
+
+        return false;
     }
 
 
 
     class recordThread extends Thread {
-        float[] javArrayInThread = new float[30];
-        int recordCounter = 15;
+        float[] javArrayInThread = new float[50];
+        int recordCounter = 25;
         Object lockObj;
 
         recordThread(Object lockObj) {
@@ -160,23 +234,22 @@ public class MonitorService extends Service implements SensorEventListener {
         public void run() {
             super.run();
             synchronized (lockObj){
-                System.arraycopy(avArray, 14, javArrayInThread, 0, 15);//tt: w: might muiltThread use avArray;
+                System.arraycopy(avArray, 24, javArrayInThread, 0, 25);//tt: w: might muiltThread use avArray;
                 while (recordCounter > 0) {
                     try {
                         Thread.sleep(60); //tt: 1000 / 15(delay_normal frequency) =  66.66;
-                        javArrayInThread[30 - recordCounter] = nowRecord;
+                        javArrayInThread[50 - recordCounter] = nowRecord;
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
                     recordCounter--;
                 }
-                Log.d(TAG, "run: array finish copy, 15th is: "+ javArrayInThread[14]);
+                Log.d(TAG, "run: array finish copy, 25th is: "+ javArrayInThread[24]);//tt: this should be the biggest value
                 //now recordCounter is 0; and we start to analyze javArrayInThread
-                //todo isFall(javArrayInThread)
                 if (isFall(javArrayInThread)) {
                     lockObj.notify();
-                    Log.d(TAG, "run: fall detected, intrige alert");
+                    Log.d(TAG, "run: fall detected, intriger alert");
                 }
 
             }
@@ -200,7 +273,12 @@ public class MonitorService extends Service implements SensorEventListener {
                     Log.d(TAG, "run: alertThread waiting");
                     lockObj.wait();
                     Log.d(TAG, "run: alertThread alert!!");
-                    startCameraKacha(MonitorService.this);//todo bug is:: ava.lang.RuntimeException: Can't create handler inside thread that has not called Looper.prepare(); you should call it in Service main Thread
+                    myAlertHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            soundPool.play(soundId, volume, volume, 1, 0, 1f);
+                        }
+                    }, 20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
