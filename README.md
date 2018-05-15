@@ -12,7 +12,9 @@ gonna todo:
 - [x] add y and z data UI
 - [x] read paper, analyze the data by 阈值分析；2018-05-01 11:52:21
 - [ ] add hard ware part 2018-05-04 03:27:18
-- [ ] use more data and sensor 2018-05-06 05:47:23
+- [x] use more data and sensor 2018-05-06 05:47:23
+
+### 16.14 window DONE!! fix thread issue, now seems 50 points window method works well
 
 ### 16.2 now we see we have these sensors on samsung s8
 

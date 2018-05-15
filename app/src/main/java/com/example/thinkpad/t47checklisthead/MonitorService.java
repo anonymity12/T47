@@ -122,18 +122,12 @@ public class MonitorService extends Service implements SensorEventListener {
         assert mSensorManager != null;
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mediaPlayer = MediaPlayer.create(this, R.raw.alert);
-        //now we first create alert thread use static lock
-        // thread1:warningAlert(always waiting for 2's notify)
-        new warningAlertThread(lockObj).start();
-        // thread2: recording thread, called when av > 35,
-        // and after record finish, it'll notify warningAlert thread.
-        // see at onSensorChange(), this thread will start
+
 
         Log.d(TAG, "onCreate: ser looper is "+ getMainLooper());
         //test sound
         Log.d(TAG, "onCreate: playSound");
 
-        startCameraKacha(this);
 
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
         mgr = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
@@ -146,20 +140,7 @@ public class MonitorService extends Service implements SensorEventListener {
 
     }
 
-    static void startCameraKacha(Context c) {
-        final SoundPool soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
-        AudioManager mgr = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
-        float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        final float volume = streamVolumeCurrent / streamVolumeMax;
-        final int id = soundPool.load(c, R.raw.alert, 1);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                soundPool.play(id, volume, volume, 1, 0, 1f);
-            }
-        }, 20);
-    }
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -209,9 +190,9 @@ public class MonitorService extends Service implements SensorEventListener {
             sum = sum + Math.sqrt(Math.pow((double)(prison - standardFallTemplate[x]),2));
             x ++;
         }
-        Toast.makeText(this,"bias sum is: " + sum,Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "isFall: bias sum is: " + sum);
         //tt: now we assume that exceed 20 is fall
-        if (sum < 20) {
+        if (sum < 300) {
             return true;
         }
 
@@ -235,6 +216,8 @@ public class MonitorService extends Service implements SensorEventListener {
             super.run();
             synchronized (lockObj){
                 System.arraycopy(avArray, 24, javArrayInThread, 0, 25);//tt: w: might muiltThread use avArray;
+                //tt: whenever we start a record thread we create a warning thread.
+                new warningAlertThread(lockObj).start();
                 while (recordCounter > 0) {
                     try {
                         Thread.sleep(60); //tt: 1000 / 15(delay_normal frequency) =  66.66;
