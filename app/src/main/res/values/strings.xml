@@ -9,7 +9,6 @@
     <string name="action_settings">Settings</string>
 
 
-
     <string name="width_1">1像素</string>
     <string name="width_3">3像素</string>
     <string name="width_5">5像素</string>
@@ -23,4 +22,6 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 </resources>

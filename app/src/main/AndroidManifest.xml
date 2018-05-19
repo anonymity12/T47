@@ -15,17 +15,33 @@
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
+
+        </activity>
+
+        <service
+            android:name=".MonitorService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".ItemListActivity"
+            android:label="@string/title_item_list"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".MonitorService"
-            android:enabled="true"
-            android:exported="true"></service>
+        <activity
+            android:name=".ItemDetailActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".ItemListActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.thinkpad.t47checklisthead.ItemListActivity" />
+        </activity>
     </application>
 
 </manifest>
