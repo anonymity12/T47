@@ -58,7 +58,7 @@ import yalantis.com.sidemenu.util.ViewAnimator;
  * 15。 姿态识别，毕业设计相关代码
  * 16. bind MonitorService now, but MonitorService has thread problem in one test.
  */
-public class MainActivity extends AppCompatActivity  implements ViewAnimator.ViewAnimatorListener,SoundPool.OnLoadCompleteListener  {
+public class MainActivity extends AppCompatActivity  implements ViewAnimator.ViewAnimatorListener  {
     private static final String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -67,27 +67,12 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
     private ViewAnimator viewAnimator;
     private int res = R.mipmap.res_walk;
     private LinearLayout linearLayout;
-    ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d(TAG, "onServiceConnected: !!!!");
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
-    SoundPool sp;
-    HashMap<Integer,Integer> hm;
-    int soundId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        contentFragment = ContentFragment.newInstance(R.drawable.ic_walk);
+        contentFragment = ContentFragment.newInstance(47);//tt: first we use 47, the special case;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, contentFragment)
                 .commit();
@@ -105,17 +90,12 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         setActionBar();
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
-        bindService(new Intent(this,MonitorService.class),serviceConnection,BIND_AUTO_CREATE);
-        Log.d("MonitorService", "onCreate: act looper is "+ getMainLooper());
-
-
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(serviceConnection);
     }
 
     private void createMenuList() {
@@ -245,31 +225,6 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         linearLayout.addView(view);
     }
 
-    void initSoundPool() {
-        hm = new HashMap<>();
-        hm.put(1,soundId);
-    }
 
-    void playSound(int sound) { // 获取AudioManager引用
-        AudioManager am = (AudioManager) this
-                .getSystemService(Context.AUDIO_SERVICE);
-        // 获取当前音量
-        float streamVolumeCurrent = am
-                .getStreamVolume(AudioManager.STREAM_MUSIC);
-        // 获取系统最大音量
-        float streamVolumeMax = am
-                .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        // 计算得到播放音量
-        float volume = streamVolumeCurrent / streamVolumeMax;
-        // 调用SoundPool的play方法来播放声音文件
-        Log.d(TAG, "playSound: gonna play volume = " + volume);
-        sp.play(hm.get(sound), volume, volume, 1, -1, 1.f);
-    }
-
-    @Override
-    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-        Log.d(TAG, "onLoadComplete: soundPool:sampleId:status:" + soundPool + sampleId + status);
-        soundPool.play(sampleId, 0.9f, 0.9f, 1, -1, 1f);
-    }
 }
 
