@@ -131,6 +131,7 @@ public class WalkingFragment extends Fragment implements ScreenShotable,SensorEv
             judgeAndAlert(av);
             xValueText.setText(x + "");
             yValueText.setText(y + "");
+            zValueText.setText(z + "");
             xData = storeXData(x);
             yData = storeYData(y);
             zData = storeZData(z);
