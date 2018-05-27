@@ -5,6 +5,19 @@
 
 now new changes for branch `graduation` is on branch `hox_fix2`
 
+### 17.1  project:sound record; add RECORD_AUDIO and storage permissions
+
+you can find record files at
+
+`getRecorderFilePath:`
+
+```
+ /storage/emulated/0/Android/data/com.example.thinkpad.t47checklisthead/cache/Recorder
+```
+
+<img src="https://github.com/anonymity12/T47/blob/hot_fix2/img/WechatIMG103.png" width = "300" height = "350" alt="图片名称" align=center />
+
+
 ### 16.17  solve previous layout refactor bug, now fragment 47 can use MonitorService
 
 ### now doing and next todo

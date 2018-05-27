@@ -4,6 +4,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -66,6 +67,7 @@ public class SoundRecoderActivity extends AppCompatActivity implements View.OnCl
             path = getCacheDir().getAbsolutePath();
 
         }
+        Log.d("Fuck!", "getRecorderFilePath: "+ path + File.separator + "Recorder");
         return path + File.separator + "Recorder";
     }
 
