@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -15,9 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.MonitorService;
 import com.example.thinkpad.t47checklisthead.R;
+
+import java.io.File;
 
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 
@@ -40,7 +44,7 @@ public class ContentFragment extends android.support.v4.app.Fragment implements 
 
     private View containerView;
     protected ImageView mImageView;
-    Button startBtn,stopBtn;
+    Button startBtn, stopBtn;
     View.OnClickListener buttonListener;
     protected int res;
     private Bitmap bitmap;
@@ -64,7 +68,6 @@ public class ContentFragment extends android.support.v4.app.Fragment implements 
         contentFragment.setArguments(bundle);
         return contentFragment;
     }
-
 
 
     @Override
@@ -91,6 +94,9 @@ public class ContentFragment extends android.support.v4.app.Fragment implements 
                         case R.id.stopMonitor:
                             getActivity().unbindService(serviceConnection);
 
+                            break;
+                        default:
+                            break;
                     }
                 }
             };
@@ -113,9 +119,10 @@ public class ContentFragment extends android.support.v4.app.Fragment implements 
      * This gives subclasses a chance to initialize themselves once
      * they know their view hierarchy has been completely created.  The fragment's
      * view hierarchy is not however attached to its parent at this point.
-     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
      * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
+     *                           from a previous saved state as given here.
      */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

@@ -1,7 +1,14 @@
 # T47
 
 
-## stage: graduation finish
+## stage: graduation fix
+
+### 17.2 project: graduation; add saveToFile()
+
+visit sensorData at/sdcard/sensor_data_recording/ like `sensorData2018-06-02-12-07-56-056.csv`
+
+<img src="https://github.com/anonymity12/T47/blob/hot_fix2/img/sensorDateOk.jpg" width = "300" height = "100" alt="sensorDataok" align=center />
+
 
 now new changes for branch `graduation` is on branch `hox_fix2`
 

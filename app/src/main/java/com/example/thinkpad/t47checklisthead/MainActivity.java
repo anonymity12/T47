@@ -1,18 +1,22 @@
 package com.example.thinkpad.t47checklisthead;
 
-import android.content.ComponentName;
-import android.content.Context;
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.AudioManager;
-import android.media.SoundPool;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,19 +25,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
-import android.os.Handler;
+import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.fragment.ContentFragment;
 import com.example.thinkpad.t47checklisthead.fragment.WalkingFragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-
 import io.codetail.animation.SupportAnimator;
-import io.codetail.animation.ViewAnimationUtils;//you need dependency:'com.github.ozodrukh:CircularReveal:1.0.4'
-
+import io.codetail.animation.ViewAnimationUtils;
 import yalantis.com.sidemenu.interfaces.Resourceble;
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import yalantis.com.sidemenu.model.SlideMenuItem;
@@ -58,7 +59,7 @@ import yalantis.com.sidemenu.util.ViewAnimator;
  * 15。 姿态识别，毕业设计相关代码
  * 16. bind MonitorService now, but MonitorService has thread problem in one test.
  */
-public class MainActivity extends AppCompatActivity  implements ViewAnimator.ViewAnimatorListener  {
+public class MainActivity extends AppCompatActivity implements ViewAnimator.ViewAnimatorListener {
     private static final String TAG = "MainActivity";
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
     private ViewAnimator viewAnimator;
     private int res = R.mipmap.res_walk;
     private LinearLayout linearLayout;
+    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,};
+    private AlertDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +94,16 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
         setActionBar();
         createMenuList();
         viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
+
+
+        //tt: code to get permission and create log file
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int i = ContextCompat.checkSelfPermission(this, permissions[0]);
+            if (i != PackageManager.PERMISSION_GRANTED) {
+                showDialogTipUserRequestPermission();
+            }
+        }
+
     }
 
 
@@ -223,6 +237,95 @@ public class MainActivity extends AppCompatActivity  implements ViewAnimator.Vie
     @Override
     public void addViewToContainer(View view) {
         linearLayout.addView(view);
+    }
+
+    //tt: code to get permission
+    private void showDialogTipUserRequestPermission() {
+        new AlertDialog.Builder(this)
+                .setTitle("Need Storage Permission")
+                .setMessage("我需要存储权限")
+                .setPositiveButton("立即开启", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startRequestPermission();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).setCancelable(false).show();
+    }
+
+    private void startRequestPermission() {
+        ActivityCompat.requestPermissions(this, permissions, 321);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 321) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    boolean b = shouldShowRequestPermissionRationale(permissions[0]);
+                    if (!b) {
+                        showDialogTipUserGoToAppSetting();
+                    } else {
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(this, "获取权限成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    }
+
+    private void showDialogTipUserGoToAppSetting() {
+        dialog = new AlertDialog.Builder(this)
+                .setTitle("Storage not Accessible")
+                .setMessage("请在-应用设置-权限-中，允许SensorDataRecord使用存储权限来保存用户数据")
+                .setPositiveButton("这就去开权限", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        goToAppSetting();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).setCancelable(false).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int i = ContextCompat.checkSelfPermission(this, permissions[0]);
+                if (i != PackageManager.PERMISSION_GRANTED) {
+                    //tt: permission not granted
+                    showDialogTipUserRequestPermission();
+                } else {
+                    //tt: permission granted
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void goToAppSetting() {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivityForResult(intent, 123);
     }
 
 

@@ -2,8 +2,15 @@ package com.example.thinkpad.t47checklisthead.utils;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
+import android.util.Log;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Utils {
+    private static final String TAG = "Utils";
 
     /*---------------------------------------------------------------------------*/
     //used for sine wave
@@ -32,5 +39,33 @@ public class Utils {
             r = 255;
         }//最后一个三等分
         return Color.rgb(r, g, b);
+    }
+
+/**
+ * Create data record file in path: /sdcard/sensor_data_recording/yyyy-MM-dd-HH-mm-ss-sss.csv
+ * */
+    public static String createDataFile() {
+        String fileName = "/sdcard/sensor_data_recording/" + getFormatDate("createFile") + ".csv";
+        File sensorDataFile = new File(fileName);
+        if (!sensorDataFile.exists()) {
+            Log.d(TAG, "onCreate: dataFile not be created???!!!!");
+            try {
+                sensorDataFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d(TAG, "createDataFile: ", e);
+            }
+        }
+        return fileName;
+    }
+
+    public static String getFormatDate(String fromWhere) {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-sss");
+        String dateString = formatter.format(date);
+        if (fromWhere.equals("createFile")) {
+            return "sensorData" + dateString;
+        }
+        return null;
     }
 }

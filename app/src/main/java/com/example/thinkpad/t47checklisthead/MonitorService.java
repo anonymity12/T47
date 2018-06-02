@@ -1,5 +1,6 @@
 package com.example.thinkpad.t47checklisthead;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -10,14 +11,51 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
+
+import static com.example.thinkpad.t47checklisthead.utils.Utils.createDataFile;
 
 /**
 * Monitor xyz data and alert at suitable time
@@ -110,6 +148,8 @@ public class MonitorService extends Service implements SensorEventListener {
     private float volume;
     private int soundId;
     private Handler myAlertHandler;
+    String fileName;
+    private String dataString;
 
 
     public MonitorService() {
@@ -124,10 +164,6 @@ public class MonitorService extends Service implements SensorEventListener {
         mediaPlayer = MediaPlayer.create(this, R.raw.alert);
 
 
-        Log.d(TAG, "onCreate: ser looper is "+ getMainLooper());
-        //test sound
-        Log.d(TAG, "onCreate: playSound");
-
 
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
         mgr = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
@@ -136,6 +172,13 @@ public class MonitorService extends Service implements SensorEventListener {
         volume = streamVolumeCurrent / streamVolumeMax;
         soundId = soundPool.load(this, R.raw.alert, 1);
         myAlertHandler = new Handler();
+
+        File sensorDataDir = new File("/sdcard/sensor_data_recording");
+        if (!sensorDataDir.exists()) {
+            boolean firstCreate = sensorDataDir.mkdirs();
+            Log.d(TAG, "onCreate: mkdirs: /sdcard/sensor_data_recording");
+        }
+        fileName = createDataFile();
 
 
     }
@@ -154,6 +197,9 @@ public class MonitorService extends Service implements SensorEventListener {
             x = event.values[0];
             y = event.values[1];
             z = event.values[2];
+            dataString = x + "," + y + "," + z + "\r\n";
+            appendMethodB(fileName, dataString);
+
             av = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
             storeData(av);
             nowRecord = av;
@@ -266,6 +312,16 @@ public class MonitorService extends Service implements SensorEventListener {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    public static void appendMethodB(String fileName, String content) {
+        try {
+            FileWriter writer = new FileWriter(fileName, true);
+            writer.write(content);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

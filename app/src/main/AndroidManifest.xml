@@ -16,8 +16,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:label="姿态识别"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 
@@ -42,10 +47,7 @@
         <activity
             android:name=".activity.SoundRecoderActivity"
             android:label="record">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
     </application>
 
