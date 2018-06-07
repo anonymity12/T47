@@ -29,18 +29,12 @@ import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * Created by paul on 2018/4/23.
+ * last modified: 0607
+ * Desc: ContentFragment实际上现在仅仅承载一个开启service，用背后的service检测跌倒的功能
  */
 
 public class ContentFragment extends android.support.v4.app.Fragment implements ScreenShotable {
     private static final String TAG = "ContentFragment";
-    public static final String CLOSE = "Close";
-    public static final String WALKING = "Walking";
-    public static final String STUMBLE = "Stumble";
-    public static final String SIT = "Sit";
-    public static final String CASE = "Case";
-    public static final String SHOP = "Shop";
-    public static final String PARTY = "Party";
-    public static final String MOVIE = "Movie";
 
     private View containerView;
     protected ImageView mImageView;

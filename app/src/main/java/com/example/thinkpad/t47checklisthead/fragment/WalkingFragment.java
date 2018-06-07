@@ -35,10 +35,8 @@ import static com.example.thinkpad.t47checklisthead.view.SplineChart01View.DATE_
 
 /**
  * Created by paul on 2018/4/24.
- * optional improvement: using dataBiding feature 2018-04-25 09:25:16
- *
- * * this commit contain function like: get the frequency of sensor 2018-05-10 07:56:39
- */
+ * Desc: 展示传感器数据的Fragment；不要在意不达意的名字
+ * */
 
 public class WalkingFragment extends Fragment implements ScreenShotable,SensorEventListener {
     // doing: 2018/5/6,10 use wave to estimate the posture not just a point, this should completed after reading brajidic

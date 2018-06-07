@@ -8,27 +8,57 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center">
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/btnll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
-            <Button
-                android:id="@+id/startMonitor"
+                <Button
+                    android:id="@+id/startMonitor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_vectorbutton"
+                    android:text="开始监测" />
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="1dp"/>
+
+                <Button
+                    android:id="@+id/stopMonitor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_vectorbutton"
+                    android:text="停止监测" />
+
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_thread_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_vectorbutton"
-                android:text="开始监测" />
-
-            <Button
-                android:id="@+id/stopMonitor"
+                android:layout_below="@+id/btnll"
+                android:layout_marginTop="60dp"
+                android:textSize="32sp"
+                android:layout_centerInParent="true"
+                android:text="0"
+                />
+            <TextView
+                android:id="@+id/tv_thread_num_help"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_vectorbutton"
-                android:text="停止监测" />
+                android:layout_toRightOf="@id/tv_thread_num"
+                android:layout_alignBaseline="@id/tv_thread_num"
+                android:text="个监控线程开启了"
+                />
+
+        </RelativeLayout>
 
 
-        </LinearLayout>
 
     </FrameLayout>
 </io.codetail.widget.RevealFrameLayout>

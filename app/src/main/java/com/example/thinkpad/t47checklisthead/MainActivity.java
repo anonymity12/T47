@@ -28,7 +28,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.fragment.ContentFragment;
+import com.example.thinkpad.t47checklisthead.fragment.TestSensorFragment;
 import com.example.thinkpad.t47checklisthead.fragment.WalkingFragment;
+import com.example.thinkpad.t47checklisthead.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,13 +105,6 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 showDialogTipUserRequestPermission();
             }
         }
-        if (VersionSetting.versionNum == 1){
-            Toast.makeText(this, "ver 1 develop", Toast.LENGTH_SHORT).show();
-        } else if (VersionSetting.versionNum == 2) {
-            Toast.makeText(this, "ver 2 check", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this,"ver ?",Toast.LENGTH_SHORT).show();
-        }
 
     }
 
@@ -120,13 +115,13 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     }
 
     private void createMenuList() {
-        SlideMenuItem menuItem0 = new SlideMenuItem(ContentFragment.CLOSE, R.drawable.ic_close);
+        SlideMenuItem menuItem0 = new SlideMenuItem(Constants.CLOSE, R.drawable.ic_close);
         list.add(menuItem0);
-        SlideMenuItem menuItem = new SlideMenuItem(ContentFragment.WALKING, R.drawable.ic_walk);
+        SlideMenuItem menuItem = new SlideMenuItem(Constants.SHOW_DATA, R.drawable.ic_data_contrast_figure);
         list.add(menuItem);
-        SlideMenuItem menuItem2 = new SlideMenuItem(ContentFragment.STUMBLE, R.drawable.ic_cliff_jumping);
+        SlideMenuItem menuItem2 = new SlideMenuItem(Constants.HARDWARE, R.drawable.ic_hardware);
         list.add(menuItem2);
-        SlideMenuItem menuItem3 = new SlideMenuItem(ContentFragment.SIT, R.drawable.ic_airline_seat_legroom_extra);
+        SlideMenuItem menuItem3 = new SlideMenuItem(Constants.RUN, R.drawable.ic_run);
         list.add(menuItem3);
     }
 
@@ -216,13 +211,16 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
     @Override
     public ScreenShotable onSwitch(Resourceble slideMenuItem, ScreenShotable screenShotable, int position) {
         switch (slideMenuItem.getName()) {
-            case ContentFragment.CLOSE:
+            case Constants.CLOSE:
                 return screenShotable;
-            case ContentFragment.WALKING:
-                Log.d(TAG, "onSwitch: fragment walking");
+            case Constants.SHOW_DATA:
                 WalkingFragment walkingFragment = WalkingFragment.newInstance("arg");
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, walkingFragment).commit();
                 return walkingFragment;
+            case Constants.HARDWARE:
+                TestSensorFragment testSensorFragment = TestSensorFragment.newInstance("arg");
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, testSensorFragment).commit();
+                return testSensorFragment;
             default:
                 return replaceFragment(screenShotable, position);//tt: guess position is where we click
         }
