@@ -103,6 +103,13 @@ public class MainActivity extends AppCompatActivity implements ViewAnimator.View
                 showDialogTipUserRequestPermission();
             }
         }
+        if (VersionSetting.versionNum == 1){
+            Toast.makeText(this, "ver 1 develop", Toast.LENGTH_SHORT).show();
+        } else if (VersionSetting.versionNum == 2) {
+            Toast.makeText(this, "ver 2 check", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this,"ver ?",Toast.LENGTH_SHORT).show();
+        }
 
     }
 

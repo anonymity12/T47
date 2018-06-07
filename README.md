@@ -3,6 +3,19 @@
 
 ## stage: graduation fix
 
+### 17.3 project: graduation; add product flavors: 1. develop 2. check
+
+remember only put files that different from each other in new flavor floder.
+
+请记住，仅仅在新建的falavor文件夹里放置那些不在main源集出现的代码文件或资源文件。
+
+比如这次提交，我在develop和check的java里放置同样名字的VersionSetting.java
+
+结果如下图：
+
+<img src="https://github.com/anonymity12/T47/blob/hot_fix2/img/verDevelopDetected.png" width = "300" height = "310" alt="sensorDataok" align=center />
+
+
 ### 17.2 project: graduation; add saveToFile()
 
 visit sensorData at/sdcard/sensor_data_recording/ like `sensorData2018-06-02-12-07-56-056.csv`
