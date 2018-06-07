@@ -3,6 +3,11 @@
 
 ## stage: graduation fix
 
+### 17.4 project: graduation; 展示两个风味的图标icon
+
+![](http://o6qns6y6x.bkt.clouddn.com/18-6-7/51364632.jpg)
+
+
 ### 17.3 project: graduation; add product flavors: 1. develop 2. check
 
 remember only put files that different from each other in new flavor floder.

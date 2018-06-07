@@ -26,7 +26,7 @@ android {
     }
 
     productFlavors {
-        //开发环境
+        //开发环境，成品环境
         develop {
             buildConfigField "int", "ENV_TYPE", "1"
             applicationId 'com.example.thinkpad.t47checklisthead.develop'
@@ -40,7 +40,7 @@ android {
             buildConfigField "int", "ENV_TYPE", "2"
             applicationId 'com.example.thinkpad.t47checklisthead.check'
             manifestPlaceholders = [
-                    app_name: "TEstMyProj",
+                    app_name: "测试我的工程",
                     app_icon: "@mipmap/ic_launcher"
             ]
         }
