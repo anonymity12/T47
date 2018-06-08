@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.MonitorService;
@@ -38,10 +39,14 @@ public class ContentFragment extends android.support.v4.app.Fragment implements 
 
     private View containerView;
     protected ImageView mImageView;
+    private TextView tvThreadNum;
     Button startBtn, stopBtn;
     View.OnClickListener buttonListener;
     protected int res;
     private Bitmap bitmap;
+    private int serviceCount = 0;
+    private boolean isBound = false;
+
 
     ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -76,6 +81,7 @@ public class ContentFragment extends android.support.v4.app.Fragment implements 
         //tt: 47 is special case: we use a activity_main_monitor_layout has two button
         if (res == 47) {
             View myView = inflater.inflate(R.layout.activity_main_monitor_layout, container, false);
+            tvThreadNum = myView.findViewById(R.id.tv_thread_num);
             startBtn = myView.findViewById(R.id.startMonitor);
             stopBtn = myView.findViewById(R.id.stopMonitor);
             buttonListener = new View.OnClickListener() {
@@ -83,11 +89,17 @@ public class ContentFragment extends android.support.v4.app.Fragment implements 
                 public void onClick(View v) {
                     switch (v.getId()) {
                         case R.id.startMonitor:
-                            getActivity().bindService(new Intent(getActivity(), MonitorService.class), serviceConnection, BIND_AUTO_CREATE);
+                            isBound = getActivity().bindService(new Intent(getActivity(), MonitorService.class), serviceConnection, BIND_AUTO_CREATE);
+                            serviceCount++;
+                            tvThreadNum.setText(serviceCount+"");
                             break;
                         case R.id.stopMonitor:
-                            getActivity().unbindService(serviceConnection);
-
+                            if (isBound) {
+                                isBound = false;
+                                getActivity().unbindService(serviceConnection);
+                                serviceCount=0;
+                                tvThreadNum.setText(serviceCount+"");
+                            }
                             break;
                         default:
                             break;

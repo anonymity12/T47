@@ -161,9 +161,6 @@ public class MonitorService extends Service implements SensorEventListener {
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         assert mSensorManager != null;
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        mediaPlayer = MediaPlayer.create(this, R.raw.alert);
-
-
 
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
         mgr = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
@@ -179,8 +176,6 @@ public class MonitorService extends Service implements SensorEventListener {
             Log.d(TAG, "onCreate: mkdirs: /sdcard/sensor_data_recording");
         }
         fileName = createDataFile();
-
-
     }
 
 
@@ -189,6 +184,18 @@ public class MonitorService extends Service implements SensorEventListener {
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind: service onBind!!!!");
         return stub;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind: service unbind!!!");
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: service destroyed");
     }
 
     @Override
@@ -205,11 +212,10 @@ public class MonitorService extends Service implements SensorEventListener {
             nowRecord = av;
 
             //tt: another way:  we always execute above and choose to execute follow
-            if (av > 30) {
+            if (av > 27) {
                 thisAlertTime = System.currentTimeMillis();
                 if (thisAlertTime - lastAlertTime > 3000){
                     //tt: start a recordThread
-                    Log.d(TAG, ">>>>>>>av > 30!!!");
                     new recordThread(lockObj).start();
                     lastAlertTime = thisAlertTime;
                 }
@@ -305,7 +311,7 @@ public class MonitorService extends Service implements SensorEventListener {
                     myAlertHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            soundPool.play(soundId, volume, volume, 1, 0, 1f);
+                            soundPool.play(soundId, volume, volume, 1, 0, 1.7f);
                         }
                     }, 20);
                 } catch (InterruptedException e) {
@@ -324,7 +330,4 @@ public class MonitorService extends Service implements SensorEventListener {
             e.printStackTrace();
         }
     }
-
-
-
 }
