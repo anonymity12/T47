@@ -27,6 +27,5 @@ public class MyJavaTest {
         stringArrayList.add("str2");
         stringArrayList.add("str3");
 
-
     }
 }

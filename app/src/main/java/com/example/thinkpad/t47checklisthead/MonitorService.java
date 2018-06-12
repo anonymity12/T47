@@ -160,14 +160,14 @@ public class MonitorService extends Service implements SensorEventListener {
         super.onCreate();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         assert mSensorManager != null;
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
 
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
         mgr = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
         streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         volume = streamVolumeCurrent / streamVolumeMax;
-        soundId = soundPool.load(this, R.raw.alert, 1);
+        soundId = soundPool.load(this, R.raw.alert11, 1);
         myAlertHandler = new Handler();
 
         File sensorDataDir = new File("/sdcard/sensor_data_recording");
@@ -195,6 +195,7 @@ public class MonitorService extends Service implements SensorEventListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mSensorManager.unregisterListener(this);
         Log.d(TAG, "onDestroy: service destroyed");
     }
 
@@ -206,13 +207,13 @@ public class MonitorService extends Service implements SensorEventListener {
             z = event.values[2];
             dataString = x + "," + y + "," + z + "\r\n";
             appendMethodB(fileName, dataString);
-
+            //Log.d(TAG, "onSensorChanged: watch fre!!!");
             av = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
             storeData(av);
             nowRecord = av;
 
             //tt: another way:  we always execute above and choose to execute follow
-            if (av > 27) {
+            if (av > 22) {
                 thisAlertTime = System.currentTimeMillis();
                 if (thisAlertTime - lastAlertTime > 3000){
                     //tt: start a recordThread
@@ -244,7 +245,7 @@ public class MonitorService extends Service implements SensorEventListener {
         }
         Log.d(TAG, "isFall: bias sum is: " + sum);
         //tt: now we assume that exceed 20 is fall
-        if (sum < 300) {
+        if (sum < 400) {
             return true;
         }
 
@@ -257,6 +258,7 @@ public class MonitorService extends Service implements SensorEventListener {
         float[] javArrayInThread = new float[50];
         int recordCounter = 25;
         Object lockObj;
+        WarningAlertThread warningAlertThread;
 
         recordThread(Object lockObj) {
             this.lockObj = lockObj;
@@ -269,10 +271,11 @@ public class MonitorService extends Service implements SensorEventListener {
             synchronized (lockObj){
                 System.arraycopy(avArray, 24, javArrayInThread, 0, 25);//tt: w: might muiltThread use avArray;
                 //tt: whenever we start a record thread we create a warning thread.
-                new warningAlertThread(lockObj).start();
+                warningAlertThread = new WarningAlertThread(lockObj);
+                warningAlertThread.start();
                 while (recordCounter > 0) {
                     try {
-                        Thread.sleep(60); //tt: 1000 / 15(delay_normal frequency) =  66.66;
+                        Thread.sleep(28); //tt: 1000 / 35(delay_normal frequency) =  28;
                         javArrayInThread[50 - recordCounter] = nowRecord;
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -280,11 +283,15 @@ public class MonitorService extends Service implements SensorEventListener {
 
                     recordCounter--;
                 }
-                Log.d(TAG, "run: array finish copy, 25th is: "+ javArrayInThread[24]);//tt: this should be the biggest value
+                for (float f : javArrayInThread) {
+                    Log.d(TAG, "WTF: ele is: "+ f);
+                }
                 //now recordCounter is 0; and we start to analyze javArrayInThread
                 if (isFall(javArrayInThread)) {
-                    lockObj.notify();
+                    lockObj.notifyAll();
                     Log.d(TAG, "run: fall detected, intriger alert");
+                }else {
+                    warningAlertThread.interrupt();
                 }
 
             }
@@ -292,10 +299,10 @@ public class MonitorService extends Service implements SensorEventListener {
         }
     }
 
-    class warningAlertThread extends Thread {
+    class WarningAlertThread extends Thread {
         Object lockObj;
 
-        warningAlertThread(Object lockObj) {
+        WarningAlertThread(Object lockObj) {
             super();
             this.lockObj = lockObj;
         }
@@ -311,7 +318,7 @@ public class MonitorService extends Service implements SensorEventListener {
                     myAlertHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            soundPool.play(soundId, volume, volume, 1, 0, 1.7f);
+                            soundPool.play(soundId, 1f, 1f, 1, 0, 1.0f);
                         }
                     }, 20);
                 } catch (InterruptedException e) {
