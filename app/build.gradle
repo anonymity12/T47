@@ -7,11 +7,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion compileSdkVer
     defaultConfig {
         applicationId "com.example.thinkpad.t47checklisthead"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion targetSdkVer
         versionCode 1
         versionName "1.0"
         flavorDimensions "versionCode"
@@ -26,52 +26,25 @@ android {
     }
 
     productFlavors {
-        //开发环境，成品环境
-        develop {
-            buildConfigField "int", "ENV_TYPE", "1"
-            applicationId 'com.example.thinkpad.t47checklisthead.develop'
-            manifestPlaceholders = [
-                    app_name: "毕业设计",
-                    app_icon: "@drawable/ic_posture"
-            ]
+        app1{
+            applicationIdSuffix ".app1"
         }
-        //测试环境
-        check {
-            buildConfigField "int", "ENV_TYPE", "2"
-            applicationId 'com.example.thinkpad.t47checklisthead.check'
-            manifestPlaceholders = [
-                    app_name: "测试我的工程",
-                    app_icon: "@mipmap/ic_launcher"
-            ]
+        app2{
+            applicationIdSuffix ".app2"
+        }
+        app3{
+            applicationIdSuffix ".app3"
         }
     }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.8'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
-    //rxbinding
-    compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-design:2.0.0'
-    compile 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0'
-    compile 'com.github.ozodrukh:CircularReveal:1.0.4'
-    implementation project(':library')//the animation lib
-    implementation project(':lib')//the chart view lib
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Testing-only dependencies
+    testImplementation "junit:junit:$junitVer"
+    androidTestImplementation "com.android.support.test:runner:$androidTestRunnerVer"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoCoreVer"
+
+    implementation "com.android.support:appcompat-v7:$supportLibVer"
 }
