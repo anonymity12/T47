@@ -25,17 +25,6 @@ android {
         }
     }
 
-    productFlavors {
-        app1 {
-            applicationIdSuffix ".app1"
-        }
-        app2 {
-            applicationIdSuffix ".app2"
-        }
-        app3 {
-            applicationIdSuffix ".app3"
-        }
-    }
 }
 
 dependencies {

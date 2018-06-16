@@ -2,7 +2,7 @@
 
     <string name="title_activity_main2">Main2Activity</string>
     <string name="hello">Hello World, HandDraw!</string>
-    <string name="app_name">姿态识别</string>
+    <string name="app_name">testApp</string>
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>

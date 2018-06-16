@@ -16,12 +16,15 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".NormalReceiver">
+
+        <receiver
+            android:name=".MyReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action android:name="com.tutorialspoint.CUSTOM_INTENT"></action>
+                <action android:name="android.intent.action.PHONE_STATE"/>
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>
