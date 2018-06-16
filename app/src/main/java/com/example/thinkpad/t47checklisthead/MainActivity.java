@@ -2,11 +2,14 @@ package com.example.thinkpad.t47checklisthead;
 
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -16,18 +19,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btn = (Button) findViewById(R.id.button);
-        Log.d(TAG, "onClick: before send broadcast");
+        final EditText edit_msg = (EditText) findViewById(R.id.edit_msg);
 
+        Button btn = (Button) findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent();
-                i.setAction("com.abc.mydata");
-                i.putExtra("data", "Data String broadcasted from MainActivity");
-                sendBroadcast(i,"com.abc.permission.GET_DATA");
-                Log.d(TAG, "onClick: send broadcast");
+                if (TextUtils.isEmpty(edit_msg.getText().toString())) {
+                    Toast.makeText(MainActivity.this, "Please enter a message to broadcast", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent("github.nisrulz.action.MY_ACTION");
+                    intent.putExtra("data", edit_msg.getText().toString());
+                    sendBroadcast(intent);
+                    Log.d(TAG, "onClick: sent!!!");
+                }
             }
         });
+
     }
 }
