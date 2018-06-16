@@ -14,27 +14,21 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
+    private final String NORMAL_ACTION = "com.example.normal.receiver";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        final EditText edit_msg = (EditText) findViewById(R.id.edit_msg);
-
-        Button btn = (Button) findViewById(R.id.btn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (TextUtils.isEmpty(edit_msg.getText().toString())) {
-                    Toast.makeText(MainActivity.this, "Please enter a message to broadcast", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent("github.nisrulz.action.MY_ACTION");
-                    intent.putExtra("data", edit_msg.getText().toString());
-                    sendBroadcast(intent);
-                    Log.d(TAG, "onClick: sent!!!");
-                }
-            }
-        });
-
     }
+
+    public void sendBroadcast(View view) {
+        Intent intent = new Intent();
+        intent.setAction("com.tutorialspoint.CUSTOM_INTENT");
+        sendBroadcast(intent);
+        Log.d(TAG, "sendBroadcast: sent!!");
+    }
+
+
+
 }

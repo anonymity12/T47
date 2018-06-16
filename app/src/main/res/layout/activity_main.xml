@@ -26,5 +26,6 @@
         android:layout_below="@+id/edit_msg"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
+        android:onClick="sendBroadcast"
         android:text="Broadcast Message"/>
 </RelativeLayout>
