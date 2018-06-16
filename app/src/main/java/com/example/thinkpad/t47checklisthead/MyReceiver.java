@@ -9,12 +9,9 @@ import android.widget.Toast;
 public class MyReceiver extends BroadcastReceiver {
     private static final String TAG = "MyReceiver";
 
-
-
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive:!! ");
         Toast.makeText(context, "some thing", Toast.LENGTH_SHORT).show();
-
     }
 }

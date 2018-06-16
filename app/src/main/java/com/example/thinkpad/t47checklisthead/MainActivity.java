@@ -14,7 +14,6 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    private final String NORMAL_ACTION = "com.example.normal.receiver";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +22,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendBroadcast(View view) {
-        Intent intent = new Intent();
-        intent.setAction("com.tutorialspoint.CUSTOM_INTENT");
+        Intent intent = new Intent("com.example.thinkpad.t47checklisthead.CUSTOM_INTENT");
         sendBroadcast(intent);
-        Log.d(TAG, "sendBroadcast: sent!!");
+        Log.d(TAG, "sendBroadcast: sent!!"+ intent.getAction());
     }
-
-
 
 }
