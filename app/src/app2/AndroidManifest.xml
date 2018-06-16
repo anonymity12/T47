@@ -16,6 +16,7 @@
             android:name="com.example.thinkpad.t47checklisthead.MyReceiver"
             android:enabled="true"
             android:exported="true"
+            android:permission="com.abc.permission.GET_DATA"
             >
             <intent-filter>
                 <action android:name="com.abc.mydata"></action>

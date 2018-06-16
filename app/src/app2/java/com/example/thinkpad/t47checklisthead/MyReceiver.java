@@ -13,11 +13,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class MyReceiver extends BroadcastReceiver {
+    private static final String TAG = "MyReceiver";
     public MyReceiver() {
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d(TAG, "onReceive: tt");
         if(intent!=null && intent.getAction().equals("com.abc.mydata")){
             Log.d("App2","From App2 Receiver : " +intent.getStringExtra("data"));
             Toast.makeText(context,"From App2 Receiver : " +intent.getStringExtra("data"),Toast
