@@ -56,7 +56,10 @@ public class IntroFragment extends Fragment {
         }
 
         // Inflate the layout resource file
-        View view = getActivity().getLayoutInflater().inflate(layoutResId, container, false);
+        View view = getActivity().getLayoutInflater().inflate(
+                layoutResId,
+                container,
+                false);
 
         // Set the current page index as the View's tag (useful in the PageTransformer)
         view.setTag(mPage);
