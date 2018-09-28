@@ -1,5 +1,11 @@
 # T47
 
+## stage 22 bottom sheet
+
+<img src="./img/bottomSheet.gif" width=300, height=600>
+
+## stage 21 call and sms
+
 ## stage 19 尝试一个viewpager实现
 
 ![](http://o6qns6y6x.bkt.clouddn.com/18-9-15/33207465.jpg)
