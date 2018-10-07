@@ -1,5 +1,19 @@
 # T47
 
+## stage 23 camera
+
+1. WindowManager.LayoutParams有个参数(`WindowManager.LayoutParams.FLAG_FULLSCREEN`)，
+可以让我们，通过`window.setFlags(int flag, int mask)`,来设置应用全屏显示
+
+2. Camera2Fragment是需要v13里的`android.support.v13.app.FragmentCompat`的,但是我们改成`ActivityCompat`倒也运行成功
+
+- [ ]   (1007) 分析，阅读这个camera代码
+
+
+
+<img src="http://o6qns6y6x.bkt.clouddn.com/18-10-7/95997320.jpg" width=500, height=1000>
+
+
 ## stage 22 bottom sheet
 
 <img src="./img/bottomSheet.gif" width=300, height=600>

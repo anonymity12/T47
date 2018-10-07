@@ -1,27 +1,7 @@
 <resources>
-
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="hello">Hello World, HandDraw!</string>
-    <string name="app_name">testApp</string>
-
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
-    <string name="action_settings">Settings</string>
-
-
-    <string name="width_1">1像素</string>
-    <string name="width_3">3像素</string>
-    <string name="width_5">5像素</string>
-    <string name="color_red">红色</string>
-    <string name="color_green">绿色</string>
-    <string name="color_blue">蓝色</string>
-    <string name="color">画笔颜色</string>
-    <string name="width">画笔宽度</string>
-    <string name="blur">模糊效果</string>
-    <string name="emboss">浮雕效果</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
-    <string name="title_item_list">Items</string>
-    <string name="title_item_detail">Item Detail</string>
+    <string name="app_name">Camera2</string>
+    <string name="picture">Picture</string>
+    <string name="description_info">Camera2 API example app</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
 </resources>
