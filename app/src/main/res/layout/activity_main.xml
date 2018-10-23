@@ -5,4 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
-    tools:context=".MainActivity"/>
+    android:layout_gravity="center_vertical"
+    tools:context=".MainActivity">
+    <Button
+        android:id="@+id/tx"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="load class!!"/>
+</FrameLayout>
