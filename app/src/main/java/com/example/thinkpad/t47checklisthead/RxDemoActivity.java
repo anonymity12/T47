@@ -1,4 +1,4 @@
-package com.example.thinkpad.t47checklisthead.rx;
+package com.example.thinkpad.t47checklisthead;
 
 import android.app.Activity;
 import android.graphics.Color;
