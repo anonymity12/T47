@@ -8,8 +8,19 @@
 
 效果：
 
-<img src=".img/dexOk.jpg" width=300, height=500>
+<img src="https://github.com/anonymity12/T47/blob/java_test/img/dexOk.jpg" width=300, height=500>
 
 不要忘记在这里的文件啊：
 
-<img src=".img/myDex_jar_output.jpg" width=600, height=250>
+<img src="https://github.com/anonymity12/T47/blob/java_test/img/myDex_jar_output.jpg" width=600, height=250>
+
+看到dex位置在外置存储内：
+
+```
+loadDexClass at position: /storage/emulated/0/Android/data/com.example.thinkpad.t47checklisthead/cache/dynamic_dex.jar
+```
+
+
+我生成的dex 实际上 的祖先是：
+
+<img src="https://github.com/anonymity12/T47/blob/java_test/img/jd-gui-outputMyJar.jpg" width=600, height=250>
