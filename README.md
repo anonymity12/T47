@@ -2,6 +2,12 @@
 
 ## java test 分支 实验分支也
 
+### Stream test
+
+我发现Stream写入的东西，我读出来是个啥？
+
+<img src="https://github.com/anonymity12/T47/blob/java_test/img/StreamTest.jpg" width=300, height=500>
+
 ### Android dex 动态加载机制
 
 参考： https://blog.csdn.net/wy353208214/article/details/50859422
