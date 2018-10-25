@@ -4,6 +4,11 @@
 
 ### Stream test
 
+我发现，java 的语法 令你不要做傻事，像这样： （在`while`里直接还显式 调用`continue` 。这是不允许的SB行为）
+
+<img src="https://github.com/anonymity12/T47/blob/java_test/img/whileNoConti.jpg" width=460, height=166>
+
+
 我发现Stream写入的东西，我读出来是个啥？
 
 <img src="https://github.com/anonymity12/T47/blob/java_test/img/StreamTest.jpg" width=300, height=500>
