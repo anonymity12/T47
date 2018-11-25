@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.R;
 import com.example.thinkpad.t47checklisthead.rx.bean.NetBean;
@@ -73,6 +74,8 @@ public class RxDemoActivity extends AppCompatActivity {
                     @Override
                     public void accept(List<String> strings) throws Exception {
                         System.out.println(strings.toString());
+                        // tt 这使得toast 在 ui 显示
+                        Toast.makeText(RxDemoActivity.this, "your observable source is: " + strings.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
