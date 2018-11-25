@@ -40,7 +40,7 @@ android {
             buildConfigField "int", "ENV_TYPE", "2"
             applicationId 'com.example.thinkpad.t47checklisthead.check'
             manifestPlaceholders = [
-                    app_name: "测试我的工程",
+                    app_name: "测试我的工程2",
                     app_icon: "@mipmap/ic_launcher"
             ]
         }

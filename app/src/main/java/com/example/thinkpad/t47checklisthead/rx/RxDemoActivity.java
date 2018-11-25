@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,25 +58,13 @@ public class RxDemoActivity extends AppCompatActivity {
         tv_text = findViewById(R.id.tv_text);
         editText = findViewById(R.id.editText);
 
-        RxTextView.textChanges(editText)
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .switchMap(new Function<CharSequence/* src type */, ObservableSource<List<String>>/* dst type */>() {
-                    @Override
-                    public ObservableSource<List<String>> apply(CharSequence charSequence) throws Exception {
-                        List<String> list = new ArrayList<String>();
-                        list.add("1024");
-                        list.add("2018");
-                        return Observable.just(list);
-                    }
-                })
+        Observable.just(1, 2, 3, 4)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<String>>() {
+                .subscribe(new Consumer<Integer>() {
                     @Override
-                    public void accept(List<String> strings) throws Exception {
-                        System.out.println(strings.toString());
-                        // tt 这使得toast 在 ui 显示
-                        Toast.makeText(RxDemoActivity.this, "your observable source is: " + strings.toString(), Toast.LENGTH_SHORT).show();
+                    public void accept(Integer integer) throws Exception {
+                        Log.d(TAG, "accept: number: " + integer);
                     }
                 });
     }
