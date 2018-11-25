@@ -59,7 +59,7 @@ public class RxDemoActivity extends AppCompatActivity {
 
         RxTextView.textChanges(editText)
                 .debounce(500, TimeUnit.MILLISECONDS)
-                .switchMap(new Function<CharSequence, ObservableSource<List<String>>>() {
+                .switchMap(new Function<CharSequence/* src type */, ObservableSource<List<String>>/* dst type */>() {
                     @Override
                     public ObservableSource<List<String>> apply(CharSequence charSequence) throws Exception {
                         List<String> list = new ArrayList<String>();
