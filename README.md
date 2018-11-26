@@ -10,17 +10,23 @@ see tutorial at https://www.jianshu.com/p/b39afa92807e
 
  https://www.jianshu.com/p/b39afa92807e
 
- # 入门教程2
+## 入门教程2
 
- create，基础使用
+### create，基础使用
 
- ![image.png](http://note.youdao.com/yws/res/63594/WEBRESOURCE82f23c603defa108105e8cb3406a75f7)
+ 代码见T47 的0.4 create 相关的 提交
 
- 代码见T47
-
- ![image.png](http://note.youdao.com/yws/res/63599/WEBRESOURCEa686870b4fabadeeb44262e697501185)
+![](https://ws1.sinaimg.cn/large/005JrW9Kgy1fxlu03u32zj30u807041y.jpg)
 
 
- # todo 1125
+
+### map 的使用
+
+代码参见本次提交： 0.5 map的使用
+
+![](https://ws1.sinaimg.cn/large/005JrW9Kgy1fxltxsro15j30vg03edhl.jpg)
+
+
+ # todo 1126 zip
 
  https://www.jianshu.com/p/b39afa92807e

@@ -102,7 +102,7 @@ public class RxDemoActivity extends AppCompatActivity {
                 mRxOperatorsText.append("onNext : value : " + integer + "\n");
                 Log.e(TAG, "onNext : value: " + integer + "\n");
                 i++;
-                // tt 如果以下的if 没有注释（aka 进行了disposable 的清理）， 则不会执行到 tt1
+                // tt 如果以下的if 没有注释（aka 进行了disposable 的清理）， 则不会执行到 tt1; aka: 进行disposal 的清理，导致无法执行到onComplete
                 if (i == 2) {
                     // clear dispose(like event sequence), so the lower reachers can not receive the upstream events anymore
                     mDisposable.dispose();
@@ -119,6 +119,25 @@ public class RxDemoActivity extends AppCompatActivity {
                 mRxOperatorsText.append("onComplete" + " \n");
                 tv_text.setText(mRxOperatorsText);
                 Log.e(TAG, "onComplete" + "\n");
+            }
+        });
+
+        /*map 将一个 Observable 通过 Function 转换成 另外一种 Observable ，下面的例子：把Integer
+ 转换 成为了 String */
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(1);
+                e.onNext(2);
+                e.onNext(3);
+            }
+        }).map(new Function<Integer, String>() {
+            public String apply(@NonNull Integer integer) throws Exception {
+                return "This is result: " + integer;
+            }
+        }).subscribe(new Consumer<String>() {
+            public void accept(@NonNull String s) throws Exception {
+                mRxOperatorsText.append("accept: " + s + "\n");
+                Log.e(TAG, "accept: " + s + "\n");
             }
         });
     }
