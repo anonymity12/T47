@@ -47,6 +47,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * 10. hensen sample login to httpbin.org
  * 11. T47: merge rx into master
  * 12. RxJava2与RxBinding的使用，优化搜索请求，textChanges
+ * ---> modified at 1126/2018
+ * 0.4 practice Rx: create basic usage
  */
 
 public class RxDemoActivity extends AppCompatActivity {
@@ -100,7 +102,7 @@ public class RxDemoActivity extends AppCompatActivity {
                 mRxOperatorsText.append("onNext : value : " + integer + "\n");
                 Log.e(TAG, "onNext : value: " + integer + "\n");
                 i++;
-                // tt 以下的if 没有注释， 则不会执行到 tt1
+                // tt 如果以下的if 没有注释（aka 进行了disposable 的清理）， 则不会执行到 tt1
                 if (i == 2) {
                     // clear dispose(like event sequence), so the lower reachers can not receive the upstream events anymore
                     mDisposable.dispose();
