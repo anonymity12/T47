@@ -7,31 +7,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thinkpad.t47checklisthead.R;
-import com.example.thinkpad.t47checklisthead.rx.bean.NetBean;
-import com.example.thinkpad.t47checklisthead.rx.bean.UserBean;
-import com.example.thinkpad.t47checklisthead.rx.bean.UserParam;
-import com.jakewharton.rxbinding2.widget.RxTextView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by paul on 30/03/2018.
@@ -110,10 +96,12 @@ public class RxDemoActivity extends AppCompatActivity {
                     Log.e(TAG, "onNext: isDisposed: " + mDisposable.isDisposed() + "\n");
                 }
             }
+
             public void onError(@NonNull Throwable e) {
                 mRxOperatorsText.append("onError: value:" + e.getMessage() + "\n");
                 Log.e(TAG, "onError : value: " + e.getMessage() + "\n");
             }
+
             // tt1
             public void onComplete() {
                 mRxOperatorsText.append("onComplete" + " \n");
@@ -138,6 +126,60 @@ public class RxDemoActivity extends AppCompatActivity {
             public void accept(@NonNull String s) throws Exception {
                 mRxOperatorsText.append("accept: " + s + "\n");
                 Log.e(TAG, "accept: " + s + "\n");
+            }
+        });
+
+        //zip
+        Observable.zip(getStringObservable(), getIntegerObservable(), new BiFunction<String, Integer, String>() {
+            public String apply(@NonNull String s, @NonNull Integer i) throws Exception {
+                return s + i;
+            }
+        }).subscribe(new Consumer<String>() {
+            public void accept(@NonNull String s) throws Exception {
+                mRxOperatorsText.append("zip: accept: " + s + "\n");
+                Log.e(TAG, "zip: accept : " + s + "\n");
+            }
+        });
+    }
+
+    private Observable<String> getStringObservable() {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                if (!e.isDisposed()) {
+                    e.onNext("A");
+                    mRxOperatorsText.append("String emit: A \n");
+                    Log.e(TAG, "String emit: A");
+                    e.onNext("B");
+                    mRxOperatorsText.append("String emit: B \n");
+                    Log.e(TAG, "String emit: B \n");
+                    e.onNext("C");
+                    mRxOperatorsText.append("String emit: C \n");
+                    Log.e(TAG, "String emit: C \n");
+                }
+            }
+        });
+    }
+
+    private Observable<Integer> getIntegerObservable() {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
+            public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
+                if (!e.isDisposed()) {
+                    e.onNext(1);
+                    mRxOperatorsText.append("Integer emit: 1 \n");
+                    Log.e(TAG, "Integer emit: 1 \n ");
+                    e.onNext(2);
+                    mRxOperatorsText.append("Integer emit: 2 \n");
+                    Log.e(TAG, "Integer emit: 2 \n");
+                    e.onNext(3);
+                    mRxOperatorsText.append("Integer emit: 3 \n");
+                    Log.e(TAG, "Integer emit: 3 \n");
+                    e.onNext(4);
+                    mRxOperatorsText.append("Integer emit: 4 \n");
+                    Log.e(TAG, "Integer emit: 4 \n");
+                    e.onNext(5);
+                    mRxOperatorsText.append("Integer emit: 5 \n");
+                    Log.e(TAG, "Integer emit: 5 \n");
+                }
             }
         });
     }
