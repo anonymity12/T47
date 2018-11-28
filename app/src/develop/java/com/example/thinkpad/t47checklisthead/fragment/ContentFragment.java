@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.thinkpad.t47checklisthead.MonitorService;
 import com.example.thinkpad.t47checklisthead.R;
 
 import java.io.File;
