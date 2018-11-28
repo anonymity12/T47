@@ -1,43 +1,16 @@
 package com.example.thinkpad.t47checklisthead;
 
-import android.Manifest;
-import android.content.DialogInterface;
+
+import android.app.Notification;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.graphics.Color;
+import android.content.ServiceConnection;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
-import com.example.thinkpad.t47checklisthead.utils.Constants;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.codetail.animation.SupportAnimator;
-import io.codetail.animation.ViewAnimationUtils;
-import yalantis.com.sidemenu.interfaces.Resourceble;
-import yalantis.com.sidemenu.interfaces.ScreenShotable;
-import yalantis.com.sidemenu.model.SlideMenuItem;
-import yalantis.com.sidemenu.util.ViewAnimator;
 
 /**
  * Basic activity for testings.
@@ -59,6 +32,79 @@ import yalantis.com.sidemenu.util.ViewAnimator;
  * 16. bind MonitorService now, but MonitorService has thread problem in one test.
  */
 public class MainActivity extends AppCompatActivity {
+    private final String TAG = "MainActivity";
+    private boolean mIsBind = false;
+    private boolean mIsConnected = false;
+    private MainService mMainService;
+    private final int NOTIFICATION_ID = 98;
+    private boolean mIsForegroundService = false;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMainService = ((MainService.ServiceHelp)service).getMainService();
+            if (mMainService != null) {
+                MainActivity.this.mIsConnected = true;
+                Log.e(TAG, "onServiceConnected: " );
+            } else {
+                new Throwable("Failed to Connect service");
+            }
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            MainActivity.this.mIsConnected = false;
+            Log.e(TAG, "Service disconnected");
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main6);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (null == startService(new Intent(MainActivity.this, MainService.class))) {
+            new Throwable("onStart: can't start service here");
+        }
+        mIsBind = bindService(new Intent(MainActivity.this, MainService.class), mConnection, Context.BIND_AUTO_CREATE);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mIsConnected && mIsForegroundService) {
+            mMainService.stopForeground(true);
+            mIsForegroundService = false;
+        }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG, "onStop: ");
+        Log.e(TAG, "onStop: isBind:  " + mIsBind + " is fore ground: " + mIsForegroundService );
+        if (mIsBind && mMainService != null && !mIsForegroundService) {
+            Log.e(TAG, "onStop: isBind:  " + mIsBind + " is fore ground: " + mIsForegroundService );
+            mMainService.startForeground(NOTIFICATION_ID, getNotification());
+            mIsForegroundService = true;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mConnection);
+    }
+
+    private Notification getNotification() {
+        Notification.Builder mBuilder = new Notification.Builder(MainActivity.this);
+        mBuilder.setShowWhen(false);
+        mBuilder.setAutoCancel(false);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+        mBuilder.setLargeIcon(((BitmapDrawable)getDrawable(R.drawable.notification_drawable)).getBitmap());
+        mBuilder.setContentText("this is content");
+        mBuilder.setContentTitle("this is title");
+        return mBuilder.build();
+    }
 
 }
 
