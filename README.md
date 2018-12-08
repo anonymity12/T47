@@ -7,11 +7,13 @@
 
 2. Camera2Fragment是需要v13里的`android.support.v13.app.FragmentCompat`的,但是我们改成`ActivityCompat`倒也运行成功
 
-- [ ]   (1007) 分析，阅读这个camera代码
+- [x]   (1007done at 1208) 分析，阅读这个camera代码
 
 
 
-<img src="http://o6qns6y6x.bkt.clouddn.com/18-10-7/95997320.jpg" width=500, height=1000>
+<img src="./img/camera0.jpg" width=400, height=400>
+
+<img src="./img/camera1.jpg" width=400, height=400>
 
 
 ## stage 22 bottom sheet

@@ -231,6 +231,8 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void onImageAvailable(ImageReader reader) {
+            String pic_name_time_prefix = Long.toString(System.currentTimeMillis());
+            mFile = new File(getActivity().getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES), pic_name_time_prefix + "pic.jpg");
             mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
         }
 
@@ -422,7 +424,6 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
     }
 
     @Override
@@ -492,6 +493,7 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
                 Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
                 if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
                     continue;
+                    //tt: 就继续下一个for loop去找另外一个 camrea 了
                 }
 
                 StreamConfigurationMap map = characteristics.get(
@@ -506,6 +508,9 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
                         new CompareSizesByArea());
                 mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
                         ImageFormat.JPEG, /*maxImages*/2);
+                //tt: 通过一个线程里的looper 和handler 配合，来实现了 图片可用的时候的保存动作。
+                //tt: imageReader 对象 持有的监听器  帮我们保存 图片到特定位置
+                //tt:  handler 处理的 是  保存图片的事件
                 mImageReader.setOnImageAvailableListener(
                         mOnImageAvailableListener, mBackgroundHandler);
 
@@ -563,6 +568,7 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
 
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
                 int orientation = getResources().getConfiguration().orientation;
+                //tt: 根据设备方向设置 texture view 的宽高
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     mTextureView.setAspectRatio(
                             mPreviewSize.getWidth(), mPreviewSize.getHeight());
@@ -664,7 +670,7 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
     }
 
 
-    //tt: others work need todo figure out
+    //tt: others work need tdo figure out 1208 觉得没必要弄明白其他的部分
 
     /**
      * Creates a new {@link CameraCaptureSession} for camera preview.
@@ -805,6 +811,7 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
      * Capture a still picture. This method should be called when we get a response in
      * {@link #mCaptureCallback} from both {@link #lockFocus()}.
      */
+    //tt: 这里发生了 真正的拍照
     private void captureStillPicture() {
         try {
             final Activity activity = getActivity();
@@ -832,13 +839,14 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("Saved: " + mFile);
-                    Log.d(TAG, mFile.toString());
+                    Log.e(TAG, "onCaptureCompleted: ");
                     unlockFocus();
                 }
             };
 
             mCaptureSession.stopRepeating();
+            //tt: 这里是真正的拍照
+            //tt: tdo 如何传入的mFile 位置？aka 如何保存到了那个位置？ ans： 在listener 初始化的时候，在他的onImageAvailable动作回调里。
             mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -858,6 +866,7 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
             // After this, the camera will go back to the normal state of preview.
+            //tt: 相机持有几个状态，最开始，或者拍完后，都是这个闲置状态： state_preview
             mState = STATE_PREVIEW;
             mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback,
                     mBackgroundHandler);
@@ -897,6 +906,7 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
+    //tt: 哇！！！ 这里就是保存图片了，这是由一个handler 发起的任务，不会影响主线程
     private static class ImageSaver implements Runnable {
 
         /**
@@ -915,6 +925,7 @@ public class Camera2Fragment extends android.support.v4.app.Fragment implements 
 
         @Override
         public void run() {
+            //tt: 在这里进行图片的保存
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);

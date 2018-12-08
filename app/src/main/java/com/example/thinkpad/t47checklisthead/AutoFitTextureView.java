@@ -13,6 +13,7 @@ import android.view.TextureView;
 /**
  * A {@link TextureView} that can be adjusted to a specified aspect ratio.
  */
+//tt: 啥都没干，就onMeasure 的时候根据比例，调整好了宽高的大小
 public class AutoFitTextureView extends TextureView {
 
     private int mRatioWidth = 0;
@@ -55,6 +56,7 @@ public class AutoFitTextureView extends TextureView {
         if (0 == mRatioWidth || 0 == mRatioHeight) {
             setMeasuredDimension(width, height);
         } else {
+            //tt: 设置为宽高中比较小的那个，优先
             if (width < height * mRatioWidth / mRatioHeight) {
                 setMeasuredDimension(width, width * mRatioHeight / mRatioWidth);
             } else {
