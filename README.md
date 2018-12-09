@@ -4,6 +4,11 @@
 
 ## 参考：
 
+ Android视图绘制流程完全解析，带你一步步深入了解View
+
+
+## part1
+
 https://blog.csdn.net/guolin_blog/article/details/12921889
 
 <img src="./img/viewDeeper.jpg" width=400, height=400>
