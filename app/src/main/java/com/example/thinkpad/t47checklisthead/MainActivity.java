@@ -23,14 +23,6 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
-        LayoutInflater LayoutInflater = android.view.LayoutInflater.from(this);
-        View buttonLayout = LayoutInflater.inflate(R.layout.button_layout, null);
-        mainLayout.addView(buttonLayout);
-        final ViewParent parentView = mainLayout.getParent();
-        Log.e(TAG, "onCreate: the parent is : " + parentView);
-        //tt:  onCreate: the parent is :  android.support.v7.widget.ContentFrameLayout{7cd041f V.E...... ......I. 0,0-0,0 #1020002 android:id/content}
-
     }
 
 }
