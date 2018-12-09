@@ -7,40 +7,24 @@ package com.example.thinkpad.t47checklisthead;
  */
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
+    private LinearLayout mainLayout;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        //tt: 这两行函数，一定call早于`setContentView()`
-        goFullScreen(this);
-        hideActionBar(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
+        LayoutInflater LayoutInflater = android.view.LayoutInflater.from(this);
+        View buttonLayout = LayoutInflater.inflate(R.layout.button_layout, null);
+        mainLayout.addView(buttonLayout);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2Fragment.newInstance())
-                    .commit();
-        }
-    }
-
-    private void hideActionBar(MainActivity mainActivity) {
-        mainActivity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        getSupportActionBar().hide();
-    }
-
-    private void goFullScreen(MainActivity mainActivity) {
-        mainActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
 }

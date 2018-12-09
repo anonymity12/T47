@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Camera2</string>
+    <string name="app_name">ViewDeeper</string>
     <string name="picture">Picture</string>
     <string name="description_info">Camera2 API example app</string>
     <string name="request_permission">This sample needs camera permission.</string>
