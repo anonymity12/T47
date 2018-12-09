@@ -13,7 +13,7 @@
 
 https://blog.csdn.net/guolin_blog/article/details/12921889
 
-<img src="./img/viewDeeper.jpg">
+<img src="./img/viewDeeper.jpg" width=200, height=200>
 
 ### 代码区
 
@@ -39,7 +39,7 @@ ref: https://blog.csdn.net/guolin_blog/article/details/16330267
 
 ### original pic
 
-<img src="./img/org_pic.jpg">
+<img src="./img/org_pic.jpg" width=400, height=200>
 
 ### eg1
 
@@ -52,7 +52,7 @@ childView.layout(-30, -30, childView.getMeasuredWidth()-90, childView.getMeasure
 
 可以看到左侧没有显示完
 
-<img src="./img/neg30.jpg" >
+<img src="./img/neg30.jpg" width=200, height=200 >
 
 
 ### eg 2
