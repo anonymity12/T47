@@ -1,45 +1,73 @@
 package com.example.thinkpad.t47checklisthead;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.MifareClassic;
-
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.View;
 
 /**
- * Basic activity for testings.
- * tested:
- * 1. seek bar control the panel view
- * 2. using fragment manager to use fragment.
- * 3. using circle button.
- * 4. using tab layout and view pager. Tutorial from http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0731/3247.html
- * 5. google example: Creating Swipe Views with Tabs.
- * 6. 03142018 test handler
- * 7. Test AIDL by jinliang gao
- * 8. Using messenger # Android art c2.4.3 @03192018
- * 9. show u how to write file in Android.
- * 11. show u how to find screen size
- * 12. show u how to use view stub
- * 13. show u how to use nfc on samsung
- * 14. test ThreadLocal
  */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    NormalUserConnection mNormalUserConnection;
+    private NormalUserAction mNormalUserAction;
+    boolean isBind;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: !!!");
+        setContentView(R.layout.activity_main);
+        doBindService();
 
+    }
+    private void doBindService() {
+        Log.d(TAG, "doBindService: ...");
+        Intent i = new Intent();
+        i.setAction("com.paul.ACTION_NORMAL_USER");
+        i.addCategory(Intent.CATEGORY_DEFAULT);
+        i.setPackage("com.example.thinkpad.t47checklisthead");
+
+        mNormalUserConnection = new NormalUserConnection();
+        isBind = bindService(i, mNormalUserConnection, BIND_AUTO_CREATE);
+
+    }
+
+
+
+    private class NormalUserConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d(TAG, "onServiceConnected: ");
+            // 拿到了 iBinder
+            mNormalUserAction = NormalUserAction.Stub.asInterface(service);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.d(TAG, "onServiceDisconnected: ");
+        }
+    }
+
+    public void saveMoneyClick(View view) throws RemoteException {
+        Log.d(TAG, "saveMoneyClick: ");
+        mNormalUserAction.saveMoney(1200);
+    }
+    public void getMoneyClick(View view) throws RemoteException {
+        float moneyGet = mNormalUserAction.getMoney();
+        Log.d(TAG, "getMoneyClick: money is " + moneyGet);
     }
 
     @Override
     protected void onResume() {
-       super.onResume();
+        super.onResume();
     }
 
 }

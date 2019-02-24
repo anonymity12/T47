@@ -21,6 +21,14 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".BankService">
+            <intent-filter>
+                <action android:name="com.paul.ACTION_NORMAL_USER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+        </service>
+
     </application>
 
 </manifest>
